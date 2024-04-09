@@ -2,14 +2,35 @@ import React from "react";
 import logo from "../../img/logo.png";
 import profile from "../../img/profile-img.jpg";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authAction } from "../../store/authStore";
+import { deleteFromLocalStorage } from "../../helpers/helper";
 
 const Header = ({ toggleSidebar, setToggleSidebar }) => {
+  const dispatch = useDispatch();
+
   const handleToogleSidebar = () => {
     if (toggleSidebar) {
       setToggleSidebar(false);
     } else {
       setToggleSidebar(true);
     }
+  };
+
+  const logout = () => {
+    dispatch(
+      authAction.setAuthStatus({
+        userName: "",
+        loggedIn: false,
+        accessToken: null,
+        refreshToken: null,
+        userId: null,
+        user_type: null,
+        timeOfLogin: null,
+        logInOperation: -1,
+      })
+    );
+    deleteFromLocalStorage("loginInfo");
   };
 
   return (
@@ -76,6 +97,7 @@ const Header = ({ toggleSidebar, setToggleSidebar }) => {
               <li>
                 <Link
                   className="dropdown-item d-flex align-items-center"
+                  onClick={logout}
                   to="/"
                 >
                   <i className="bi bi-box-arrow-right"></i>

@@ -1,9 +1,80 @@
 import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../img/logo.png";
+import ajaxCall from "../../helpers/ajaxCall";
+import { authAction } from "../../store/authStore";
+import { setToLocalStorage } from "../../helpers/helper";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const initialValues = {
+    userName: "",
+    password: "",
+    remember: false,
+  };
+
+  const validationSchema = Yup.object({
+    userName: Yup.string().required("Username is required"),
+    password: Yup.string().required("Password is required"),
+  });
+
+  const handleLogin = async (values, { setSubmitting }) => {
+    const { userName, password } = values;
+
+    const data = {
+      username: userName,
+      password: password,
+    };
+
+    try {
+      const response = await ajaxCall(
+        "login/",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify(data),
+          withCredentials: true,
+        },
+        8000
+      );
+
+      if (response.status === 200) {
+        toast.success("Welcome To PowerCRM");
+
+        const loginObj = {
+          userName,
+          loggedIn: true,
+          accessToken: response.data.token.access,
+          refreshToken: response.data.token.refresh,
+          user_type: response.data.user_status,
+          userId: response.data.userid,
+          timeOfLogin: Date.now(),
+          logInOperation: 1,
+        };
+
+        dispatch(authAction.setAuthStatus(loginObj));
+        setToLocalStorage("loginInfo", loginObj, true);
+        navigate(`/Dashboard`);
+      } else if (response.status === 400) {
+        toast.error("Please Check Username and Password");
+      } else if (response.status === 404) {
+        toast.error("Username or Password is wrong, Please try again...");
+      }
+    } catch (error) {
+      toast.error("Some Problem Occurred. Please try again.");
+    }
+    setSubmitting(false);
+  };
+
   return (
     <main>
       <div className="container">
@@ -29,65 +100,54 @@ const Login = () => {
                       </p>
                     </div>
 
-                    <form className="row g-3 needs-validation" novalidate>
-                      <div className="col-12">
-                        <label for="yourUsername" className="form-label">
-                          Username
-                        </label>
-                        <div className="input-group has-validation">
-                          <input
-                            type="text"
-                            name="username"
-                            className="form-control"
-                            id="yourUsername"
-                            required
-                          />
-                          <div className="invalid-feedback">
-                            Please enter your username.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="col-12">
-                        <label for="yourPassword" className="form-label">
-                          Password
-                        </label>
-                        <input
-                          type="password"
-                          name="password"
-                          className="form-control"
-                          id="yourPassword"
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Please enter your password!
-                        </div>
-                      </div>
-
-                      <div className="col-12">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            name="remember"
-                            value="true"
-                            id="rememberMe"
-                          />
-                          <label className="form-check-label" for="rememberMe">
-                            Remember me
+                    <Formik
+                      initialValues={initialValues}
+                      validationSchema={validationSchema}
+                      onSubmit={handleLogin}
+                    >
+                      <Form className="row g-3 needs-validation" noValidate>
+                        <div className="col-12">
+                          <label htmlFor="yourUsername" className="form-label">
+                            Username
                           </label>
+                          <Field
+                            id="yourUsername"
+                            type="text"
+                            name="userName"
+                            className="form-control"
+                          />
+                          <ErrorMessage
+                            name="userName"
+                            component="div"
+                            className="text-danger mt-2"
+                          />
                         </div>
-                      </div>
-                      <div className="col-12">
-                        <button
-                          className="btn btn-primary w-100"
-                          type="submit"
-                          onClick={() => navigate("/Dashboard")}
-                        >
-                          Login
-                        </button>
-                      </div>
-                    </form>
+                        <div className="col-12">
+                          <label htmlFor="yourPassword" className="form-label">
+                            Password
+                          </label>
+                          <Field
+                            id="yourPassword"
+                            type="password"
+                            name="password"
+                            className="form-control"
+                          />
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="text-danger"
+                          />
+                        </div>
+                        <div className="col-12">
+                          <button
+                            className="btn btn-primary w-100"
+                            type="submit"
+                          >
+                            Login
+                          </button>
+                        </div>
+                      </Form>
+                    </Formik>
                   </div>
                 </div>
               </div>

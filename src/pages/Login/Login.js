@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -8,15 +8,16 @@ import logo from "../../img/logo.png";
 import ajaxCall from "../../helpers/ajaxCall";
 import { authAction } from "../../store/authStore";
 import { setToLocalStorage } from "../../helpers/helper";
+import Loading from "../../UI/Loading/Loading";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
     userName: "",
     password: "",
-    remember: false,
   };
 
   const validationSchema = Yup.object({
@@ -25,6 +26,7 @@ const Login = () => {
   });
 
   const handleLogin = async (values, { setSubmitting }) => {
+    setIsLoading(true);
     const { userName, password } = values;
 
     const data = {
@@ -72,6 +74,7 @@ const Login = () => {
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     }
+    setIsLoading(false);
     setSubmitting(false);
   };
 
@@ -139,12 +142,16 @@ const Login = () => {
                           />
                         </div>
                         <div className="col-12">
-                          <button
-                            className="btn btn-primary w-100"
-                            type="submit"
-                          >
-                            Login
-                          </button>
+                          {isLoading ? (
+                            <Loading color="primary" text="Logging in..." />
+                          ) : (
+                            <button
+                              className="btn btn-primary w-100"
+                              type="submit"
+                            >
+                              Login
+                            </button>
+                          )}
                         </div>
                       </Form>
                     </Formik>

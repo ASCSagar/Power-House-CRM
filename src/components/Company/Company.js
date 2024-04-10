@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import ajaxCall from "../../helpers/ajaxCall";
 import { Link } from "react-router-dom";
+import ajaxCall from "../../helpers/ajaxCall";
+import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
+import EditIcon from "../../UI/Icons/EditIcon";
+import CheckIcon from "../../UI/Icons/CheckIcon";
+import CancelIcon from "../../UI/Icons/Cancel";
+import Table from "../../UI/Table/Table";
 
-const ViewCompany = () => {
-  const [companyData, setCompanyData] = useState();
+const Company = () => {
+  const [companyData, setCompanyData] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -36,8 +38,22 @@ const ViewCompany = () => {
     })();
   }, []);
 
+  const editCompany = (params) => (
+    <Link
+      to={`/companies/edit/${params.data.id}`}
+      className="enquiryAction"
+      title="Edit Company"
+    >
+      <EditIcon />
+    </Link>
+  );
+
+  const companyDashboard = (params) => (
+    <Link to={`/companies/${params.data.id}`}>{params.value}</Link>
+  );
+
   const renderItemAvailable = ({ value }) => {
-    return value ? "Yes" : "No";
+    return value ? <CheckIcon /> : <CancelIcon />;
   };
 
   const columns = [
@@ -45,24 +61,12 @@ const ViewCompany = () => {
       headerClass: "ag-grid-header",
       resizable: false,
       width: 60,
-      cellRenderer: (params) => {
-        return (
-          <Link
-            to={`/companies/edit/${params.data.id}`}
-            className="enquiryAction"
-            title="Edit Company"
-          >
-            <i className="bi bi-pencil-fill"></i>
-          </Link>
-        );
-      },
+      cellRenderer: editCompany,
     },
     {
       headerName: "Company Name",
       field: "name",
-      cellRenderer: (params) => {
-        return <Link to={`/companies/${params.data.id}`}>{params.value}</Link>;
-      },
+      cellRenderer: companyDashboard,
       filter: true,
     },
     {
@@ -163,50 +167,23 @@ const ViewCompany = () => {
     },
   ];
 
-  const gridOptions = {
-    rowData: companyData,
-    columnDefs: columns,
-    pagination: true,
-    paginationPageSize: 10,
-    domLayout: "autoHeight",
-    defaultColDef: {
-      sortable: true,
-      resizable: true,
-    },
-  };
   return (
-    <>
-      <main id="main" class="main">
-        <div class="pagetitle">
-          <h1>View Companies</h1>
-          <nav>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <Link to="/Dashboard">Home</Link>
-              </li>
-              <li class="breadcrumb-item">Company</li>
-              <li class="breadcrumb-item active">View Companies</li>
-            </ol>
-          </nav>
-        </div>
-
-        <section class="section">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">View Companies</h5>
-                  <div className="ag-theme-quartz">
-                    <AgGridReact {...gridOptions} />
-                  </div>
-                </div>
+    <main id="main" className="main">
+      <Breadcrumbs title="Companies" middle="Company" main="Dashboard" />
+      <section className="section">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Companies</h5>
+                <Table rowData={companyData} columnDefs={columns} />
               </div>
             </div>
           </div>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+    </main>
   );
 };
 
-export default ViewCompany;
+export default Company;

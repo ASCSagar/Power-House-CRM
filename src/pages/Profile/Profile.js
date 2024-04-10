@@ -1,24 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import profile from "../../img/profile-img.jpg";
+import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 
 const Profile = () => {
   return (
     <body>
       <main id="main" className="main">
-        <div className="pagetitle">
-          <h1>Profile</h1>
-          <nav>
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <Link to="/Dashboard">Home</Link>
-              </li>
-              <li className="breadcrumb-item">Users</li>
-              <li className="breadcrumb-item active">Profile</li>
-            </ol>
-          </nav>
-        </div>
-
+        <Breadcrumbs title="Profile" main="Dashboard" />
         <section className="section profile">
           <div className="row">
             <div className="col-xl-4">

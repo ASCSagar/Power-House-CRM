@@ -50,9 +50,9 @@ const SideBar = () => {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link to="/ViewCompanies">
+              <Link to="/Companies">
                 <i className="bi bi-circle"></i>
-                <span>View Companies</span>
+                <span>Companies</span>
               </Link>
             </li>
           </ul>
@@ -75,9 +75,15 @@ const SideBar = () => {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link href="forms-layouts.html">
+              <Link to="/Sites">
                 <i className="bi bi-circle"></i>
-                <span>View Site</span>
+                <span>Sites</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/GroupSites">
+                <i className="bi bi-circle"></i>
+                <span>Group Sites</span>
               </Link>
             </li>
           </ul>
@@ -100,9 +106,15 @@ const SideBar = () => {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link href="tables-data.html">
+              <Link to="/Quotes">
                 <i className="bi bi-circle"></i>
-                <span>View Quote</span>
+                <span>Quotes</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/GroupQuotes">
+                <i className="bi bi-circle"></i>
+                <span>Group Quotes</span>
               </Link>
             </li>
           </ul>
@@ -125,9 +137,9 @@ const SideBar = () => {
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <Link href="charts-apexcharts.html">
+              <Link to="/Notes">
                 <i className="bi bi-circle"></i>
-                <span>View Note</span>
+                <span>Notes</span>
               </Link>
             </li>
           </ul>

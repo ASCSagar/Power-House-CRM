@@ -1,23 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 
 const Contact = () => {
   return (
     <body>
       <main id="main" className="main">
-        <div className="pagetitle">
-          <h1>Contact</h1>
-          <nav>
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <Link to="/Dashboard">Home</Link>
-              </li>
-              <li className="breadcrumb-item">Pages</li>
-              <li className="breadcrumb-item active">Contact</li>
-            </ol>
-          </nav>
-        </div>
-
+        <Breadcrumbs title="Contact" main="Dashboard" />
         <section className="section contact">
           <div className="row gy-4">
             <div className="col-xl-6">

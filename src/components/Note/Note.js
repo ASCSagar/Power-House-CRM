@@ -4,9 +4,15 @@ import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
 import EditIcon from "../../UI/Icons/EditIcon";
+import CreateNote from "./CreateNote";
 
 const Note = () => {
   const [noteData, setNoteData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -34,11 +40,11 @@ const Note = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const editNote = (params) => (
     <Link
-      to={`/notes/edit/${params.data.id}`}
+      to={`/Note/${params.data.id}`}
       className="enquiryAction"
       title="Edit Note"
     >
@@ -73,6 +79,7 @@ const Note = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Notes" middle="Note" main="Dashboard" />
+      <CreateNote refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

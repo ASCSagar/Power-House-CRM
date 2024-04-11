@@ -6,6 +6,7 @@ import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import EditIcon from "../../UI/Icons/EditIcon";
 import Table from "../../UI/Table/Table";
+import CreateSite from "./CreateSite";
 
 const Site = () => {
   const [siteData, setSiteData] = useState([]);
@@ -97,6 +98,7 @@ const Site = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Sites" middle="Site" main="Dashboard" />
+      <CreateSite />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

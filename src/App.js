@@ -54,6 +54,7 @@ function App() {
         <Route path="/GroupQuotes" element={<GroupQuote />}></Route>
 
         <Route path="/Notes" element={<Note/>}></Route>
+        <Route path="/Note/:noteId" element={<Note/>}></Route>
       </Routes>
       {loction !== "/" && <Footer />}
     </body>

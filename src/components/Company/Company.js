@@ -6,9 +6,15 @@ import EditIcon from "../../UI/Icons/EditIcon";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import Table from "../../UI/Table/Table";
+import CreateCompany from "./CreateCompany";
 
 const Company = () => {
   const [companyData, setCompanyData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -36,7 +42,7 @@ const Company = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const editCompany = (params) => (
     <Link
@@ -170,6 +176,7 @@ const Company = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Companies" middle="Company" main="Dashboard" />
+      <CreateCompany refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

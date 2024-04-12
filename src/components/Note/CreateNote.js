@@ -119,8 +119,8 @@ const CreateNote = ({ refreshTableMode }) => {
       );
       if ([200, 201].includes(response.status)) {
         resetReducerForm();
-        toast.success(`Note ${noteId ? "Updated" : "Created"} Successfully`);
         refreshTableMode();
+        toast.success(`Note ${noteId ? "Updated" : "Created"} Successfully`);
         if (noteId) {
           navigate("/Notes");
         }
@@ -145,7 +145,7 @@ const CreateNote = ({ refreshTableMode }) => {
           <Select
             className="col-md-4"
             label="Site Name"
-            name="site"
+            name="select_site"
             isSearch={true}
             value={noteData.select_site}
             onChange={(val) => {

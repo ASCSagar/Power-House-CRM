@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
+import CreateGroupSite from "./CreateGroupSite";
 
 const GroupSite = () => {
   const [groupSiteData, setGroupSiteData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -32,7 +38,7 @@ const GroupSite = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const renderItemAvailable = ({ value }) => {
     return value === "MULTI" ? "Multi Site GROUP" : "BASIC SITE GROUP";
@@ -60,6 +66,7 @@ const GroupSite = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Group Sites" middle="Site" main="Dashboard" />
+      <CreateGroupSite refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

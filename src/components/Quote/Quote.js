@@ -6,9 +6,15 @@ import ajaxCall from "../../helpers/ajaxCall";
 import EditIcon from "../../UI/Icons/EditIcon";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
+import CreateQuote from "./CreateQuote";
 
 const Quote = () => {
   const [quoteData, setQuoteData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -36,7 +42,7 @@ const Quote = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const editQuote = (params) => (
     <Link
@@ -125,6 +131,7 @@ const Quote = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Quotes" middle="Quote" main="Dashboard" />
+      <CreateQuote refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

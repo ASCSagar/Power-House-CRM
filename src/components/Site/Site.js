@@ -10,6 +10,11 @@ import CreateSite from "./CreateSite";
 
 const Site = () => {
   const [siteData, setSiteData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -37,7 +42,7 @@ const Site = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const editSite = (params) => (
     <Link
@@ -98,7 +103,7 @@ const Site = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Sites" middle="Site" main="Dashboard" />
-      <CreateSite />
+      <CreateSite refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

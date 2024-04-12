@@ -69,19 +69,24 @@ const MultiSelect = (props) => {
   }, [props.url, props.isEditLoading, props.isEdit]);
 
   return (
-    <Multiselect
-      options={options}
-      selectedValues={props.value}
-      onSelect={props.onSelect}
-      onRemove={props.onSelect}
-      name={props.name}
-      search={props.isSearch}
-      placeholder="Select Options"
-      singleSelect={!props.multiple}
-      displayValue="name"
-      loading={isLoading}
-      loadingMessage={props.loadMsg}
-    />
+    <div className={props.className}>
+      <label for="inputEmail5" className="form-label">
+        {props.label}
+      </label>
+      <Multiselect
+        options={options}
+        selectedValues={props.value}
+        onSelect={props.onSelect}
+        onRemove={props.onSelect}
+        name={props.name}
+        search={props.isSearch}
+        placeholder="Select Options"
+        singleSelect={!props.multiple}
+        displayValue="name"
+        loading={isLoading}
+        loadingMessage={props.loadMsg}
+      />
+    </div>
   );
 };
 

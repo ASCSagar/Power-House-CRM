@@ -6,6 +6,7 @@ import ajaxCall from "../../helpers/ajaxCall";
 import Tab from "../../UI/Tab/Tab";
 import SmallModal from "../../UI/Modal/Modal";
 import LookUp from "../LookUp/LookUp";
+import Loading from "../../UI/Loading/Loading";
 
 const tabs = [
   { id: "1", title: "Site Information" },
@@ -17,46 +18,51 @@ const tabs = [
 ];
 
 const initialSiteData = {
-  siteName: "",
-  companyName: "",
+  site_name: "",
+  company: "",
   reference: "",
-  groupName: "",
-  typeOfOwner: "",
-  ownerName: "",
-  currentSupplier: "",
-  lead_source: "",
-  isTenant: false,
-  isVacant: false,
-  isCoT: false,
-  customerConsent: false,
-  siteReference: "",
-  supportContact: "",
-  leadType: "",
-  notes: "",
-  billToSent: "",
-  welcomeLetterSent: "",
-  agentEmail: "",
-  loa_header_to_use: "",
-  loaTemplate: "",
-  billingAddressLine1: "",
-  billingAddressLine2: "",
-  billingAddressLine3: "",
-  billingAddressLine4: "",
-  billingCountry: "",
-  billingPostCode: "",
+  group_name: "",
+  type_of_owner: "",
+  owner_name: "",
+  current_gas_and_electricity_supplier_details: "",
+  tenant: false,
+  vacant: false,
+  change_of_tenancy: false,
+
   siteAddressLine1: "",
   siteAddressLine2: "",
   siteAddressLine3: "",
   siteAddressLine4: "",
-  siteCountry: "",
+  siteCountry: "United Kingdom",
   sitePostCode: "",
+
   isBillingSiteSame: false,
-  firstName: "",
-  lastName: "",
-  contactTitle: "",
+
+  billingAddressLine1: "",
+  billingAddressLine2: "",
+  billingAddressLine3: "",
+  billingAddressLine4: "",
+  billingCountry: "United Kingdom",
+  billingPostCode: "",
+
+  site_reference: "",
+  support_contact: "",
+  lead_source: "",
+  notes: "",
+  lead_type: "",
+  bill_to_sent: "",
+  welcome_letter_send: "",
+
+  first_name: "",
+  last_name: "",
+  contact_title: "",
   position: "",
-  telephoneNumber: "",
+  telephone_number: "",
   email: "",
+
+  agent_email: "",
+  loa_header_to_use: "",
+  loa_template: "",
 };
 
 const siteReducer = (state, action) => {
@@ -87,13 +93,41 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CreateSite = () => {
+const CreateSite = ({ refreshTableMode }) => {
   const [siteData, dispatchSite] = useReducer(siteReducer, initialSiteData);
   const [formStatus, setFormStatus] = useState(initialSubmit);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleSiteAddress = (data) => {
+    dispatchSite({
+      type: "siteAddressLine1",
+      value: data.addressMatch.address.addressBreakdown[0],
+    });
+    dispatchSite({
+      type: "siteAddressLine2",
+      value: data.addressMatch.address.addressBreakdown[1],
+    });
+    dispatchSite({
+      type: "siteAddressLine3",
+      value: data.addressMatch.address.addressBreakdown[2],
+    });
+    dispatchSite({
+      type: "siteAddressLine4",
+      value: data.addressMatch.address.addressBreakdown[3],
+    });
+    dispatchSite({
+      type: "sitePostCode",
+      value: data.postCode,
+    });
+    setIsModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const validateForm = () => {
-    if (!siteData.siteName) {
+    if (!siteData.site_name) {
       setFormError("Site Name is Required");
       return false;
     }
@@ -128,28 +162,31 @@ const CreateSite = () => {
       isSubmitting: true,
     });
     let sendData = {
-      group_name: siteData.groupName,
-      site_name: siteData.siteName,
-      company: siteData.companyName,
+      site_name: siteData.site_name,
+      company: siteData.company,
       reference: siteData.reference,
-      type_of_owner: siteData.typeOfOwner,
-      current_gas_and_electricity_supplier_details: siteData.currentSupplier,
-      tenant: siteData.isTenant,
-      vacant: siteData.isVacant,
-      change_of_tenancy: siteData.isCoT,
-      customer_consent: siteData.customerConsent,
-      site_reference: siteData.siteReference,
-      support_contact: siteData.supportContact,
-      lead_type: siteData.leadType,
+      type_of_owner: siteData.type_of_owner,
+      group_name: siteData.group_name,
+      current_gas_and_electricity_supplier_details:
+        siteData.current_gas_and_electricity_supplier_details,
+      tenant: siteData.tenant,
+      vacant: siteData.vacant,
+      change_of_tenancy: siteData.change_of_tenancy,
+
+      site_reference: siteData.site_reference,
+      support_contact: siteData.support_contact,
+      lead_source: siteData.lead_source,
       notes: siteData.notes,
-      bill_to_sent: siteData.billToSent,
-      welcome_letter_send: siteData.welcomeLetterSent,
-      agent_email: siteData.agentEmail,
+      lead_type: siteData.lead_type,
+      bill_to_sent: siteData.bill_to_sent,
+      welcome_letter_send: siteData.welcome_letter_send,
+
+      agent_email: siteData.agent_email,
       loa_header_to_use: siteData.loa_header_to_use,
-      loa_template: siteData.loaTemplate,
+      loa_template: siteData.loa_template,
     };
-    if (siteData.ownerName) {
-      sendData.owner_name = siteData.ownerName;
+    if (siteData.owner_name) {
+      sendData.owner_name = siteData.owner_name;
     }
     const billingAddress = {
       billing_address: {
@@ -157,7 +194,7 @@ const CreateSite = () => {
         addressline2: siteData.billingAddressLine2,
         addressline3: siteData.billingAddressLine3,
         addressline4: siteData.billingAddressLine4,
-        country: siteData.billingCountry,
+        country: "United Kingdom",
         postcode: siteData.billingPostCode,
       },
     };
@@ -178,7 +215,7 @@ const CreateSite = () => {
         addressline2: siteData.siteAddressLine2,
         addressline3: siteData.siteAddressLine3,
         addressline4: siteData.siteAddressLine4,
-        country: siteData.siteCountry,
+        country: "United Kingdom",
         postcode: siteData.sitePostCode,
       },
     };
@@ -194,11 +231,11 @@ const CreateSite = () => {
     }
     const contactsInfo = {
       contacts: {
-        first_name: siteData.firstName,
-        last_name: siteData.lastName,
-        contact_title: siteData.contactTitle,
+        first_name: siteData.first_name,
+        last_name: siteData.last_name,
+        contact_title: siteData.contact_title,
         position: siteData.position,
-        telephone_number: siteData.telephoneNumber,
+        telephone_number: siteData.telephone_number,
         email: siteData.email,
       },
     };
@@ -230,6 +267,7 @@ const CreateSite = () => {
       );
       if ([200, 201].includes(response.status)) {
         resetReducerForm();
+        refreshTableMode();
         toast.success("Site Created Successfully");
       } else if ([400, 404].includes(response.status)) {
         toast.error("Some Problem Occurred. Please try again.");
@@ -274,10 +312,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.siteName}
+                      value={siteData.site_name}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "siteName",
+                          type: "site_name",
                           value: e.target.value,
                         })
                       }
@@ -286,12 +324,12 @@ const CreateSite = () => {
                   <Select
                     className="col-md-3"
                     label="Company Name"
-                    name="companyName"
+                    name="company"
                     isSearch={true}
-                    value={siteData.companyName}
+                    value={siteData.company}
                     onChange={(val) => {
                       dispatchSite({
-                        type: "companyName",
+                        type: "company",
                         value: val,
                       });
                     }}
@@ -315,12 +353,12 @@ const CreateSite = () => {
                   <Select
                     className="col-md-3"
                     label="Group Name"
-                    name="groupName"
+                    name="group_name"
                     isSearch={true}
-                    value={siteData.groupName}
+                    value={siteData.group_name}
                     onChange={(val) => {
                       dispatchSite({
-                        type: "groupName",
+                        type: "group_name",
                         value: val,
                       });
                     }}
@@ -334,10 +372,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.typeOfOwner}
+                      value={siteData.type_of_owner}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "typeOfOwner",
+                          type: "type_of_owner",
                           value: e.target.value,
                         })
                       }
@@ -348,10 +386,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.ownerName}
+                      value={siteData.owner_name}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "ownerName",
+                          type: "owner_name",
                           value: e.target.value,
                         })
                       }
@@ -364,11 +402,13 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      name="currentSupplier"
-                      value={siteData.currentSupplier}
+                      name="current_gas_and_electricity_supplier_details"
+                      value={
+                        siteData.current_gas_and_electricity_supplier_details
+                      }
                       onChange={(e) =>
                         dispatchSite({
-                          type: "currentSupplier",
+                          type: "current_gas_and_electricity_supplier_details",
                           value: e.target.value,
                         })
                       }
@@ -381,10 +421,10 @@ const CreateSite = () => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckDefault"
-                      checked={siteData.isTenant}
+                      checked={siteData.tenant}
                       onChange={(e) => {
                         dispatchSite({
-                          type: "isTenant",
+                          type: "tenant",
                           value: e.target.checked,
                         });
                       }}
@@ -401,10 +441,10 @@ const CreateSite = () => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckDefault"
-                      checked={siteData.isVacant}
+                      checked={siteData.vacant}
                       onChange={(e) => {
                         dispatchSite({
-                          type: "isVacant",
+                          type: "vacant",
                           value: e.target.checked,
                         });
                       }}
@@ -421,10 +461,10 @@ const CreateSite = () => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckDefault"
-                      checked={siteData.isCoT}
+                      checked={siteData.change_of_tenancy}
                       onChange={(e) => {
                         dispatchSite({
-                          type: "isCoT",
+                          type: "change_of_tenancy",
                           value: e.target.checked,
                         });
                       }}
@@ -525,13 +565,7 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.siteCountry}
-                      onChange={(e) =>
-                        dispatchSite({
-                          type: "siteCountry",
-                          value: e.target.value,
-                        })
-                      }
+                      value="United Kingdom"
                     />
                   </div>
                 </div>
@@ -640,13 +674,7 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.billingCountry}
-                      onChange={(e) =>
-                        dispatchSite({
-                          type: "billingCountry",
-                          value: e.target.value,
-                        })
-                      }
+                      value="United Kingdom"
                     />
                   </div>
                 </div>
@@ -663,10 +691,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.siteReference}
+                      value={siteData.site_reference}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "siteReference",
+                          type: "site_reference",
                           value: e.target.value,
                         })
                       }
@@ -675,12 +703,12 @@ const CreateSite = () => {
                   <Select
                     className="col-md-4"
                     label="Support Contact"
-                    name="supportContact"
+                    name="support_contact"
                     isSearch={true}
-                    value={siteData.supportContact}
+                    value={siteData.support_contact}
                     onChange={(val) => {
                       dispatchSite({
-                        type: "supportContact",
+                        type: "support_contact",
                         value: val,
                       });
                     }}
@@ -725,14 +753,14 @@ const CreateSite = () => {
                         { name: "ELECTRICITY", value: "ELECTRICITY" },
                       ]}
                       placeholder="Choose from options"
-                      value={siteData.leadType}
+                      value={siteData.lead_type}
                       onChange={(val) => {
                         dispatchSite({
-                          type: "leadType",
+                          type: "lead_type",
                           value: val,
                         });
                       }}
-                      name="leadType"
+                      name="lead_type"
                     />
                   </div>
                 </div>
@@ -742,10 +770,10 @@ const CreateSite = () => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckDefault"
-                      checked={siteData.billToSent}
+                      checked={siteData.bill_to_sent}
                       onChange={(e) => {
                         dispatchSite({
-                          type: "billToSent",
+                          type: "bill_to_sent",
                           value: e.target.checked,
                         });
                       }}
@@ -762,10 +790,10 @@ const CreateSite = () => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckDefault"
-                      checked={siteData.welcomeLetterSent}
+                      checked={siteData.welcome_letter_send}
                       onChange={(e) => {
                         dispatchSite({
-                          type: "welcomeLetterSent",
+                          type: "welcome_letter_send",
                           value: e.target.checked,
                         });
                       }}
@@ -791,10 +819,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.firstName}
+                      value={siteData.first_name}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "firstName",
+                          type: "first_name",
                           value: e.target.value,
                         })
                       }
@@ -805,10 +833,10 @@ const CreateSite = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.lastName}
+                      value={siteData.last_name}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "lastName",
+                          type: "last_name",
                           value: e.target.value,
                         })
                       }
@@ -826,14 +854,14 @@ const CreateSite = () => {
                         { name: "Dr", value: "Dr" },
                       ]}
                       placeholder="Choose from options"
-                      value={siteData.contactTitle}
+                      value={siteData.contact_title}
                       onChange={(val) => {
                         dispatchSite({
-                          type: "contactTitle",
+                          type: "contact_title",
                           value: val,
                         });
                       }}
-                      name="contactTitle"
+                      name="contact_title"
                     />
                   </div>
                 </div>
@@ -857,10 +885,10 @@ const CreateSite = () => {
                     <input
                       type="number"
                       className="form-control"
-                      value={siteData.telephoneNumber}
+                      value={siteData.telephone_number}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "telephoneNumber",
+                          type: "telephone_number",
                           value: e.target.value,
                         })
                       }
@@ -894,10 +922,10 @@ const CreateSite = () => {
                     <input
                       type="email"
                       className="form-control"
-                      value={siteData.agentEmail}
+                      value={siteData.agent_email}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "agentEmail",
+                          type: "agent_email",
                           value: e.target.value,
                         })
                       }
@@ -924,12 +952,12 @@ const CreateSite = () => {
                   <Select
                     className="col-md-4"
                     label="LOA Template"
-                    name="loaTemplate"
+                    name="loa_template"
                     isSearch={true}
-                    value={siteData.loaTemplate}
+                    value={siteData.loa_template}
                     onChange={(val) => {
                       dispatchSite({
-                        type: "loaTemplate",
+                        type: "loa_template",
                         value: val,
                       });
                     }}
@@ -940,21 +968,37 @@ const CreateSite = () => {
               </div>
             </div>
             <div className="text-center mt-4">
-              <button type="submit" className="btn btn-primary">
-                Create Site
-              </button>
+              {formStatus.isError ? (
+                <div className="text-danger mb-2">{formStatus.errMsg}</div>
+              ) : (
+                <div className="text-success mb-2">{formStatus.errMsg}</div>
+              )}
+              {formStatus.isSubmitting ? (
+                <Loading color="primary" text={"Creating Site..."} />
+              ) : (
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={formStatus.isSubmitting}
+                >
+                  Create Site
+                </button>
+              )}
             </div>
           </form>
         </div>
       </div>
       <SmallModal
-        size="lg"
+        size="xl"
         centered
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Choose The Site Address Here By Search Postcode"
+        title="Choose The Site Address Here By Search Post Code"
       >
-        <LookUp />
+        <LookUp
+          onRowSelect={handleSiteAddress}
+          onCloseModal={handleCloseModal}
+        />
       </SmallModal>
     </>
   );

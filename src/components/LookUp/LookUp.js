@@ -4,16 +4,10 @@ import ajaxCall from "../../helpers/ajaxCall";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import Loading from "../../UI/Loading/Loading";
 
 const initialDetails = {
   s_postcode: "",
-};
-
-const reducer = (state, action) => {
-  if (action?.reset) {
-    return action.value;
-  }
-  return { ...state, [action.type]: action.value };
 };
 
 const initialSubmit = {
@@ -22,7 +16,16 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const LookUp = () => {
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "reset":
+      return initialDetails;
+    default:
+      return { ...state, [action.type]: action.value };
+  }
+};
+
+const LookUp = ({ onRowSelect, onCloseModal }) => {
   const [addressData, setAddressData] = useState([]);
   const [apiData, dispatchapiData] = useReducer(reducer, initialDetails);
   const [formStatus, setFormStatus] = useState(initialSubmit);
@@ -131,7 +134,7 @@ const LookUp = () => {
     },
     {
       headerName: "Address 1",
-      cellRenderer: function (params) {
+      cellRenderer: (params) => {
         const address1 = params.data.addressMatch?.address?.addressBreakdown[0];
         return address1 || "";
       },
@@ -139,7 +142,7 @@ const LookUp = () => {
     },
     {
       headerName: "Address 2",
-      cellRenderer: function (params) {
+      cellRenderer: (params) => {
         const address2 = params.data.addressMatch?.address?.addressBreakdown[1];
         return address2 || "";
       },
@@ -147,7 +150,7 @@ const LookUp = () => {
     },
     {
       headerName: "Address 3",
-      cellRenderer: function (params) {
+      cellRenderer: (params) => {
         const address3 = params.data.addressMatch?.address?.addressBreakdown[2];
         return address3 || "";
       },
@@ -155,7 +158,7 @@ const LookUp = () => {
     },
     {
       headerName: "Address 4",
-      cellRenderer: function (params) {
+      cellRenderer: (params) => {
         const address4 = params.data.addressMatch?.address?.addressBreakdown[3];
         return address4 || "";
       },
@@ -171,7 +174,10 @@ const LookUp = () => {
   const onSelectionChanged = (event) => {
     const selectedNode = event.api.getSelectedNodes()[0];
     selectedRowData = selectedNode ? selectedNode.data : null;
-    console.log("selectedRowData", selectedRowData);
+    if (selectedRowData) {
+      onRowSelect(selectedRowData);
+      onCloseModal();
+    }
   };
 
   const gridOptions = {
@@ -190,30 +196,47 @@ const LookUp = () => {
 
   return (
     <div>
-      <div className="col-md-8">
-        <label className="form-label">Post Code</label>
-        <div className="d-flex gap-3">
-          <input
-            type="email"
-            className="form-control"
-            value={apiData.s_postcode}
-            onChange={(e) =>
-              dispatchapiData({
-                type: "s_postcode",
-                value: e.target.value,
-              })
-            }
-          />
-          <button className="btn btn-primary" onClick={searchByPostCode}>
-            Search
-          </button>
+      <div className="d-flex justify-content-center">
+        <div className="col-md-4">
+          <label className="form-label">Post Code</label>
+          <div className="d-flex gap-3">
+            <input
+              type="email"
+              className="form-control"
+              value={apiData.s_postcode}
+              onChange={(e) =>
+                dispatchapiData({
+                  type: "s_postcode",
+                  value: e.target.value,
+                })
+              }
+            />
+            <div className="text-center">
+              {formStatus.isSubmitting ? (
+                <Loading color="primary" text={"Searching..."} />
+              ) : (
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={formStatus.isSubmitting}
+                  onClick={searchByPostCode}
+                >
+                  Search
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <div className="mt-3">
-        {addressData.length > 0 && (
+        {addressData.length > 0 ? (
           <div className="ag-theme-quartz">
             <AgGridReact {...gridOptions} />
           </div>
+        ) : (
+          <h5 className="text-center text-danger">
+            No Data Found By Given PostCode
+          </h5>
         )}
       </div>
     </div>

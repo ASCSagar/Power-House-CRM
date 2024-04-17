@@ -48,23 +48,9 @@ const Login = () => {
         },
         8000
       );
-
       if (response.status === 200) {
         toast.success("Welcome To PowerCRM");
-
-        const loginObj = {
-          userName,
-          loggedIn: true,
-          accessToken: response.data.token.access,
-          refreshToken: response.data.token.refresh,
-          user_type: response.data.user_status,
-          userId: response.data.userid,
-          timeOfLogin: Date.now(),
-          logInOperation: 1,
-        };
-
-        dispatch(authAction.setAuthStatus(loginObj));
-        setToLocalStorage("loginInfo", loginObj, true);
+        handleLoginSuccess(response);
         navigate(`/Dashboard`);
       } else if (response.status === 400) {
         toast.error("Please Check Username and Password");
@@ -76,6 +62,39 @@ const Login = () => {
     }
     setIsLoading(false);
     setSubmitting(false);
+  };
+
+  const handleLoginSuccess = (response) => {
+    const localObj = {
+      loggedIn: true,
+      accessToken: response.data.token.access,
+      refreshToken: response.data.token.refresh,
+      timeOfLogin: Date.now(),
+    };
+    setToLocalStorage("loginInfo", localObj, true);
+    dispatch(
+      authAction.setAuthStatus({
+        loggedIn: true,
+        accessToken: response.data?.token?.access,
+        refreshToken: response.data?.token?.refresh,
+        timeOfLogin: Date.now(),
+        logInOperation: 1,
+      })
+    );
+    setTimeout(
+      () =>
+        dispatch(
+          authAction.setAuthStatus({
+            loggedIn: false,
+            accessToken: null,
+            refreshToken: null,
+            timeOfLogin: null,
+            logInOperation: -1,
+          })
+        ),
+      1000 * 60 * 30
+    );
+    navigate("/Dashboard");
   };
 
   return (

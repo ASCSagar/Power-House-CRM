@@ -20,7 +20,7 @@ const Site = () => {
     (async () => {
       try {
         const response = await ajaxCall(
-          `sites/get/site/?ordering=-date_created`,
+          "sites/get/site/",
           {
             headers: {
               Accept: "application/json",
@@ -34,7 +34,7 @@ const Site = () => {
           8000
         );
         if (response?.status === 200) {
-          setSiteData(response?.data?.results);
+          setSiteData(response?.data);
         } else {
           console.log("error");
         }

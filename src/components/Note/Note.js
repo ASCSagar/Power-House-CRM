@@ -32,7 +32,7 @@ const Note = () => {
           8000
         );
         if (response?.status === 200) {
-          setNoteData(response?.data?.results);
+          setNoteData(response?.data);
         } else {
           console.log("error");
         }

@@ -4,15 +4,21 @@ import ajaxCall from "../../helpers/ajaxCall";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import EditIcon from "../../UI/Icons/EditIcon";
+import CreateGroupQuote from "./CreateGroupQuote";
 
 const GroupQuote = () => {
   const [groupQuoteData, setGroupQuoteData] = useState([]);
+  const [refreshTable, setRefreshTable] = useState(0);
+
+  const refreshTableMode = () => {
+    setRefreshTable((prev) => prev + 1);
+  };
 
   useEffect(() => {
     (async () => {
       try {
         const response = await ajaxCall(
-          `quote/group-quote/?ordering=-date_created`,
+          "quote/group-quote/",
           {
             headers: {
               Accept: "application/json",
@@ -26,7 +32,7 @@ const GroupQuote = () => {
           8000
         );
         if (response?.status === 200) {
-          setGroupQuoteData(response?.data?.results);
+          setGroupQuoteData(response?.data);
         } else {
           console.log("error");
         }
@@ -34,7 +40,7 @@ const GroupQuote = () => {
         console.log("error", error);
       }
     })();
-  }, []);
+  }, [refreshTable]);
 
   const groupType = (params) => {
     return params?.data?.group_detail
@@ -79,6 +85,7 @@ const GroupQuote = () => {
   return (
     <main id="main" className="main">
       <Breadcrumbs title="Group Quotes" middle="Quote" main="Dashboard" />
+      <CreateGroupQuote refreshTableMode={refreshTableMode} />
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

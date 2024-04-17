@@ -20,7 +20,7 @@ const Company = () => {
     (async () => {
       try {
         const response = await ajaxCall(
-          `company/?ordering=-date_created`,
+          "company/",
           {
             headers: {
               Accept: "application/json",
@@ -34,7 +34,7 @@ const Company = () => {
           8000
         );
         if (response?.status === 200) {
-          setCompanyData(response?.data?.results);
+          setCompanyData(response?.data);
         } else {
           console.log("error");
         }

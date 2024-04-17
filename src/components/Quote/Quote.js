@@ -20,7 +20,7 @@ const Quote = () => {
     (async () => {
       try {
         const response = await ajaxCall(
-          `quote/generate-quote/?ordering=-date_created`,
+          "quote/generate-quote/",
           {
             headers: {
               Accept: "application/json",
@@ -34,7 +34,7 @@ const Quote = () => {
           8000
         );
         if (response?.status === 200) {
-          setQuoteData(response?.data?.results);
+          setQuoteData(response?.data);
         } else {
           console.log("error");
         }

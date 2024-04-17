@@ -155,7 +155,7 @@ const CreateNote = ({ refreshTableMode }) => {
               });
             }}
             objKey={["site_name"]}
-            url="sites/get/site/?pagination=false&brief=true"
+            url="sites/get/site/"
           />
           <div className="col-md-4">
             <label className="form-label">Site Notes</label>

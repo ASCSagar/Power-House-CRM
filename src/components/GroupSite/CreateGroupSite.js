@@ -145,7 +145,7 @@ const CreateGroupSite = ({ refreshTableMode }) => {
             objKey={["site_name"]}
             url={
               formData.company
-                ? `sites/get/site/?company=${formData.company}&pagination=false&brief=True`
+                ? `sites/get/site/?company=${formData.company}`
                 : ""
             }
           />

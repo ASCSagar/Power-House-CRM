@@ -16,7 +16,7 @@ const GroupSite = () => {
     (async () => {
       try {
         const response = await ajaxCall(
-          `multisite/?ordering=-date_created`,
+          "multisite/",
           {
             headers: {
               Accept: "application/json",

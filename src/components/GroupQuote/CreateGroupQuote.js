@@ -1,10 +1,10 @@
 import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
-import ajaxCall from "../../helpers/ajaxCall";
 import Select from "../../UI/Select/Select";
+import ajaxCall from "../../helpers/ajaxCall";
 import Loading from "../../UI/Loading/Loading";
 
-const initialQuoteData = {
+const initialGroupQuotesData = {
   site: "",
   supplier: "",
   product: "",
@@ -19,9 +19,9 @@ const initialQuoteData = {
   rates_already_include_at_uplift: false,
 };
 
-const reducerQuote = (state, action) => {
+const reducerGroupQuote = (state, action) => {
   if (action.type === "reset") {
-    return action.payload || initialQuoteData;
+    return action.payload || initialGroupQuotesData;
   }
   return { ...state, [action.type]: action.value };
 };
@@ -32,44 +32,47 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CreateQuote = ({ refreshTableMode }) => {
-  const [quoteData, dispatchQuote] = useReducer(reducerQuote, initialQuoteData);
+const CreateGroupQuote = ({refreshTableMode}) => {
+  const [groupQuoteData, dispatchGroupQuote] = useReducer(
+    reducerGroupQuote,
+    initialGroupQuotesData
+  );
   const [formStatus, setFormStatus] = useState(initialSubmit);
 
   const validateForm = () => {
-    if (!quoteData.site) {
+    if (!groupQuoteData.site) {
       setFormError("Site is Required");
       return false;
     }
-    if (!quoteData.supplier) {
+    if (!groupQuoteData.supplier) {
       setFormError("Supplier is Required");
       return false;
     }
-    if (!quoteData.product) {
+    if (!groupQuoteData.product) {
       setFormError("Product is Required");
       return false;
     }
-    if (!quoteData.term) {
+    if (!groupQuoteData.term) {
       setFormError("Term is Required");
       return false;
     }
-    if (!quoteData.day_rate) {
+    if (!groupQuoteData.day_rate) {
       setFormError("Day Rate is Required");
       return false;
     }
-    if (!quoteData.night_rate) {
+    if (!groupQuoteData.night_rate) {
       setFormError("Night Rate is Required");
       return false;
     }
-    if (!quoteData.standing_charge) {
+    if (!groupQuoteData.standing_charge) {
       setFormError("Standing Charge Rate is Required");
       return false;
     }
-    if (!quoteData.kva_charge) {
+    if (!groupQuoteData.kva_charge) {
       setFormError("KVA Charge Rate is Required");
       return false;
     }
-    if (!quoteData.up_lift) {
+    if (!groupQuoteData.up_lift) {
       setFormError("UP Lift Charge Rate is Required");
       return false;
     }
@@ -82,7 +85,7 @@ const CreateQuote = ({ refreshTableMode }) => {
   };
 
   const resetReducerForm = () => {
-    dispatchQuote({
+    dispatchGroupQuote({
       type: "reset",
     });
   };
@@ -95,7 +98,7 @@ const CreateQuote = ({ refreshTableMode }) => {
     });
   };
 
-  const createQuote = async (e) => {
+  const createGroupSite = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     setFormStatus({
@@ -103,24 +106,23 @@ const CreateQuote = ({ refreshTableMode }) => {
       errMsg: null,
       isSubmitting: true,
     });
-    let sendData = {
-      site: quoteData.site,
-      supplier: quoteData.supplier,
-      product: quoteData.product,
-      term: quoteData.term,
-      day_rate: quoteData.day_rate,
-      night_rate: quoteData.night_rate,
-      standing_charge: quoteData.standing_charge,
-      kva_charge: quoteData.kva_charge,
-      additional_charge: quoteData.additional_charge,
-      extra_info: quoteData.extra_info,
-      up_lift: quoteData.up_lift,
+    let body = {
+      supplier: groupQuoteData.supplier,
+      product: groupQuoteData.product,
+      term: groupQuoteData.term,
+      day_rate: groupQuoteData.day_rate,
+      night_rate: groupQuoteData.night_rate,
+      standing_charge: groupQuoteData.standing_charge,
+      kva_charge: groupQuoteData.kva_charge,
+      additional_charge: groupQuoteData.additional_charge,
+      extra_info: groupQuoteData.extra_info,
+      up_lift: groupQuoteData.up_lift,
       rates_already_include_at_uplift:
-        quoteData.rates_already_include_at_uplift,
+        groupQuoteData.rates_already_include_at_uplift,
     };
     try {
       const response = await ajaxCall(
-        "quote/generate-quote/",
+        `quote/generate-quote/multisite/${groupQuoteData.site}/`,
         {
           headers: {
             Accept: "application/json",
@@ -130,14 +132,14 @@ const CreateQuote = ({ refreshTableMode }) => {
             }`,
           },
           method: "POST",
-          body: JSON.stringify(sendData),
+          body: JSON.stringify(body),
         },
         8000
       );
       if ([200, 201].includes(response.status)) {
         resetReducerForm();
         refreshTableMode();
-        toast.success("Quote Created Successfully");
+        toast.success("Group Quote Created Successfully");
       } else if ([400, 404].includes(response.status)) {
         toast.error("Some Problem Occurred. Please try again.");
       }
@@ -154,63 +156,61 @@ const CreateQuote = ({ refreshTableMode }) => {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">Create Quote</h5>
-        <form onSubmit={createQuote}>
-          <div className="row g-3 mt-1">
-            <Select
-              className="col-md-3"
-              label="Site Name"
-              name="site"
-              isSearch={true}
-              value={quoteData.site}
-              onChange={(val) => {
-                dispatchQuote({
-                  type: "site",
-                  value: val,
-                });
-              }}
-              objKey={["site_name"]}
-              url="sites/get/site/"
+        <h5 className="card-title">Create Group Quote</h5>
+        <form className="row g-3" onSubmit={createGroupSite}>
+          <Select
+            className="col-md-3"
+            label="Group"
+            name="site"
+            isSearch={true}
+            value={groupQuoteData.site}
+            onChange={(val) => {
+              dispatchGroupQuote({
+                type: "site",
+                value: val,
+              });
+            }}
+            objKey={["group_name"]}
+            url="multisite/"
+          />
+          <div className="col-md-3">
+            <label className="form-label">Supplier</label>
+            <input
+              type="text"
+              className="form-control"
+              value={groupQuoteData.supplier}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "supplier",
+                  value: e.target.value,
+                })
+              }
             />
-            <div className="col-md-3">
-              <label className="form-label">Supplier</label>
-              <input
-                type="text"
-                className="form-control"
-                value={quoteData.supplier}
-                onChange={(e) =>
-                  dispatchQuote({
-                    type: "supplier",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Product</label>
-              <input
-                type="text"
-                className="form-control"
-                value={quoteData.product}
-                onChange={(e) =>
-                  dispatchQuote({
-                    type: "product",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Term</label>
-              <input
-                type="number"
-                className="form-control"
-                value={quoteData.term}
-                onChange={(e) =>
-                  dispatchQuote({ type: "term", value: e.target.value })
-                }
-              />
-            </div>
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">Product</label>
+            <input
+              type="text"
+              className="form-control"
+              value={groupQuoteData.product}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "product",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">Term</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.term}
+              onChange={(e) =>
+                dispatchGroupQuote({ type: "term", value: e.target.value })
+              }
+            />
           </div>
           <div className="row g-3 mt-2">
             <div className="col-md-3">
@@ -218,9 +218,12 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.day_rate}
+                value={groupQuoteData.day_rate}
                 onChange={(e) =>
-                  dispatchQuote({ type: "day_rate", value: e.target.value })
+                  dispatchGroupQuote({
+                    type: "day_rate",
+                    value: e.target.value,
+                  })
                 }
               />
             </div>
@@ -229,9 +232,12 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.night_rate}
+                value={groupQuoteData.night_rate}
                 onChange={(e) =>
-                  dispatchQuote({ type: "night_rate", value: e.target.value })
+                  dispatchGroupQuote({
+                    type: "night_rate",
+                    value: e.target.value,
+                  })
                 }
               />
             </div>
@@ -240,9 +246,9 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.standing_charge}
+                value={groupQuoteData.standing_charge}
                 onChange={(e) =>
-                  dispatchQuote({
+                  dispatchGroupQuote({
                     type: "standing_charge",
                     value: e.target.value,
                   })
@@ -254,9 +260,12 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.kva_charge}
+                value={groupQuoteData.kva_charge}
                 onChange={(e) =>
-                  dispatchQuote({ type: "kva_charge", value: e.target.value })
+                  dispatchGroupQuote({
+                    type: "kva_charge",
+                    value: e.target.value,
+                  })
                 }
               />
             </div>
@@ -267,9 +276,9 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.additional_charge}
+                value={groupQuoteData.additional_charge}
                 onChange={(e) =>
-                  dispatchQuote({
+                  dispatchGroupQuote({
                     type: "additional_charge",
                     value: e.target.value,
                   })
@@ -281,9 +290,12 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="text"
                 className="form-control"
-                value={quoteData.extra_info}
+                value={groupQuoteData.extra_info}
                 onChange={(e) =>
-                  dispatchQuote({ type: "extra_info", value: e.target.value })
+                  dispatchGroupQuote({
+                    type: "extra_info",
+                    value: e.target.value,
+                  })
                 }
               />
             </div>
@@ -292,9 +304,9 @@ const CreateQuote = ({ refreshTableMode }) => {
               <input
                 type="number"
                 className="form-control"
-                value={quoteData.up_lift}
+                value={groupQuoteData.up_lift}
                 onChange={(e) =>
-                  dispatchQuote({ type: "up_lift", value: e.target.value })
+                  dispatchGroupQuote({ type: "up_lift", value: e.target.value })
                 }
               />
             </div>
@@ -305,9 +317,9 @@ const CreateQuote = ({ refreshTableMode }) => {
                 className="form-check-input"
                 type="checkbox"
                 id="flexSwitchCheckDefault"
-                checked={quoteData.rates_already_include_at_uplift}
+                checked={groupQuoteData.rates_already_include_at_uplift}
                 onChange={(e) => {
-                  dispatchQuote({
+                  dispatchGroupQuote({
                     type: "rates_already_include_at_uplift",
                     value: e.target.checked,
                   });
@@ -332,7 +344,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 className="btn btn-primary"
                 disabled={formStatus.isSubmitting}
               >
-                Create Quote
+                Create Group Quote
               </button>
             )}
           </div>
@@ -342,4 +354,4 @@ const CreateQuote = ({ refreshTableMode }) => {
   );
 };
 
-export default CreateQuote;
+export default CreateGroupQuote;

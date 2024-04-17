@@ -25,9 +25,8 @@ const Dashboard = () => {
         },
         8000
       );
-
       if (response?.status === 200) {
-        setData(response?.data?.results);
+        setData(response?.data);
       } else {
         console.log("Error fetching data");
       }
@@ -37,9 +36,9 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchData("sites/get/site/?ordering=-date_created", setSiteData);
-    fetchData("quote/generate-quote/?ordering=-date_created", setQuoteData);
-    fetchData("company/?ordering=-date_created", setCompanyData);
+    fetchData("sites/get/site/", setSiteData);
+    fetchData("quote/generate-quote/", setQuoteData);
+    fetchData("company/", setCompanyData);
   }, []);
 
   return (
@@ -51,7 +50,6 @@ const Dashboard = () => {
         <div className="row">
           <div className="col-lg-8">
             <div className="row">
-
               <div className="col-xxl-4 col-md-6">
                 <div className="card info-card sales-card">
                   <div className="card-body">

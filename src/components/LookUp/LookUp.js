@@ -5,6 +5,8 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import Loading from "../../UI/Loading/Loading";
+import CheckIcon from "../../UI/Icons/CheckIcon";
+import CancelIcon from "../../UI/Icons/Cancel";
 
 const initialDetails = {
   s_postcode: "",
@@ -102,7 +104,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
   };
 
   const renderItemAvailable = ({ value }) => {
-    return value ? "Yes" : "No";
+    return value ? <CheckIcon /> : <CancelIcon />;
   };
 
   let selectedRowData = null;

@@ -25,16 +25,7 @@ const QuotesChart = ({ quoteData }) => {
     ],
   };
 
-  return (
-    <div className="col-12">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Quotes</h5>
-          <Line options={{ responsive: true }} data={data} />
-        </div>
-      </div>
-    </div>
-  );
+  return <Line options={{ responsive: true }} data={data} />;
 };
 
 export default QuotesChart;

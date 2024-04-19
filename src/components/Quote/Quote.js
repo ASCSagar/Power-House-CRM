@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
-import EditIcon from "../../UI/Icons/EditIcon";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import CreateQuote from "./CreateQuote";
@@ -11,6 +9,11 @@ import CreateQuote from "./CreateQuote";
 const Quote = () => {
   const [quoteData, setQuoteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [showCreateQuote, setShowCreateQuote] = useState(false);
+
+  const openCreateQuote = () => {
+    setShowCreateQuote((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -36,35 +39,19 @@ const Quote = () => {
         if (response?.status === 200) {
           setQuoteData(response?.data);
         } else {
-          console.log("error");
+          console.error("error");
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     })();
   }, [refreshTable]);
-
-  const editQuote = (params) => (
-    <Link
-      to={`/quotes/edit/${params.data.id}`}
-      className="enquiryAction"
-      title="Edit Site"
-    >
-      <EditIcon />
-    </Link>
-  );
 
   const renderItemAvailable = ({ value }) => {
     return value ? <CheckIcon /> : <CancelIcon />;
   };
 
   const columns = [
-    {
-      headerClass: "ag-grid-header",
-      resizable: false,
-      width: 60,
-      cellRenderer: editQuote,
-    },
     {
       headerName: "Site Name",
       field: "site.site_name",
@@ -130,8 +117,18 @@ const Quote = () => {
 
   return (
     <main id="main" className="main">
-      <Breadcrumbs title="Quotes" middle="Quote" main="Dashboard" />
-      <CreateQuote refreshTableMode={refreshTableMode} />
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Quotes"
+          middle="Quote"
+          middleUrl="Quotes"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openCreateQuote}>
+          <i className="bi bi-plus-square"></i> Create Quote
+        </button>
+      </div>
+      {showCreateQuote && <CreateQuote refreshTableMode={refreshTableMode} />}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

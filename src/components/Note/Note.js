@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
-import EditIcon from "../../UI/Icons/EditIcon";
 import CreateNote from "./CreateNote";
 
 const Note = () => {
   const [noteData, setNoteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [showCreateNote, setShowCreateNote] = useState(false);
+
+  const openCreateNote = () => {
+    setShowCreateNote((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -34,31 +37,15 @@ const Note = () => {
         if (response?.status === 200) {
           setNoteData(response?.data);
         } else {
-          console.log("error");
+          console.error("error");
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     })();
   }, [refreshTable]);
 
-  const editNote = (params) => (
-    <Link
-      to={`/Note/${params.data.id}`}
-      className="enquiryAction"
-      title="Edit Note"
-    >
-      <EditIcon />
-    </Link>
-  );
-
   const columns = [
-    {
-      headerClass: "ag-grid-header",
-      resizable: false,
-      width: 60,
-      cellRenderer: editNote,
-    },
     {
       headerName: "Site Name",
       field: "select_site",
@@ -78,8 +65,18 @@ const Note = () => {
 
   return (
     <main id="main" className="main">
-      <Breadcrumbs title="Notes" middle="Note" main="Dashboard" />
-      <CreateNote refreshTableMode={refreshTableMode} />
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Notes"
+          middle="Note"
+          middleUrl="Notes"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openCreateNote}>
+          <i className="bi bi-plus-square"> Create Note</i>
+        </button>
+      </div>
+      {showCreateNote && <CreateNote refreshTableMode={refreshTableMode} />}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

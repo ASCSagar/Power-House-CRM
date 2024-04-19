@@ -19,16 +19,7 @@ const SiteChart = ({ siteData }) => {
     ],
   };
 
-  return (
-    <div className="col-12">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Sites</h5>
-          <Bar options={{ responsive: true }} data={data} />
-        </div>
-      </div>
-    </div>
-  );
+  return <Bar options={{ responsive: true }} data={data} />;
 };
 
 export default SiteChart;

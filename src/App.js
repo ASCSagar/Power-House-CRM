@@ -15,8 +15,10 @@ import Footer from "./components/Footer/Footer";
 import Dashboard from "./components/Dashboard/Dashboard";
 
 import Company from "./components/Company/Company";
+import CompanyDashboard from "./components/Company/Dashboard";
 
 import Site from "./components/Site/Site";
+import SiteDashboard from "./components/Site/Dashboard";
 import GroupSite from "./components/GroupSite/GroupSite";
 
 import Quote from "./components/Quote/Quote";
@@ -46,15 +48,20 @@ function App() {
         <Route path="/Contact" element={<Contact />}></Route>
 
         <Route path="/Companies" element={<Company />}></Route>
+        <Route
+          path="/Company/:companyId"
+          element={<CompanyDashboard />}
+        ></Route>
 
         <Route path="/Sites" element={<Site />}></Route>
+        <Route path="/Site/:siteId" element={<SiteDashboard />}></Route>
         <Route path="/GroupSites" element={<GroupSite />}></Route>
 
         <Route path="/Quotes" element={<Quote />}></Route>
         <Route path="/GroupQuotes" element={<GroupQuote />}></Route>
 
-        <Route path="/Notes" element={<Note/>}></Route>
-        <Route path="/Note/:noteId" element={<Note/>}></Route>
+        <Route path="/Notes" element={<Note />}></Route>
+        <Route path="/Note/:noteId" element={<Note />}></Route>
       </Routes>
       {loction !== "/" && <Footer />}
     </body>

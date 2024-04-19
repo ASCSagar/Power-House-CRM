@@ -7,6 +7,11 @@ import CreateGroupSite from "./CreateGroupSite";
 const GroupSite = () => {
   const [groupSiteData, setGroupSiteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [showGroupSites, setShowGroupSites] = useState(false);
+
+  const openGroupSites = () => {
+    setShowGroupSites((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -30,12 +35,12 @@ const GroupSite = () => {
           8000
         );
         if (response?.status === 200) {
-          setGroupSiteData(response?.data?.results);
+          setGroupSiteData(response?.data);
         } else {
-          console.log("error");
+          console.error("error");
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     })();
   }, [refreshTable]);
@@ -65,8 +70,20 @@ const GroupSite = () => {
 
   return (
     <main id="main" className="main">
-      <Breadcrumbs title="Group Sites" middle="Site" main="Dashboard" />
-      <CreateGroupSite refreshTableMode={refreshTableMode} />
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Group Sites"
+          middle="Site"
+          middleUrl="GroupSites"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openGroupSites}>
+          <i className="bi bi-plus-square"></i> Create Group Site
+        </button>
+      </div>
+      {showGroupSites && (
+        <CreateGroupSite refreshTableMode={refreshTableMode} />
+      )}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

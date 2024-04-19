@@ -4,13 +4,17 @@ import ajaxCall from "../../helpers/ajaxCall";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
-import EditIcon from "../../UI/Icons/EditIcon";
 import Table from "../../UI/Table/Table";
 import CreateSite from "./CreateSite";
 
 const Site = () => {
   const [siteData, setSiteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [showCreateSite, setShowCreateSite] = useState(false);
+
+  const openCreateSite = () => {
+    setShowCreateSite((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -36,26 +40,16 @@ const Site = () => {
         if (response?.status === 200) {
           setSiteData(response?.data);
         } else {
-          console.log("error");
+          console.error("error");
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     })();
   }, [refreshTable]);
 
-  const editSite = (params) => (
-    <Link
-      to={`/sites/edit/${params.data.id}`}
-      className="enquiryAction"
-      title="Edit Site"
-    >
-      <EditIcon />
-    </Link>
-  );
-
   const siteDashboard = (params) => (
-    <Link to={`/sites/${params.data.id}`}>{params.value}</Link>
+    <Link to={`/site/${params.data.id}`}>{params.value}</Link>
   );
 
   const renderItemAvailable = ({ value }) => {
@@ -63,12 +57,6 @@ const Site = () => {
   };
 
   const columns = [
-    {
-      headerClass: "ag-grid-header",
-      resizable: false,
-      width: 60,
-      cellRenderer: editSite,
-    },
     {
       headerName: "Site Name",
       field: "site_name",
@@ -102,8 +90,18 @@ const Site = () => {
 
   return (
     <main id="main" className="main">
-      <Breadcrumbs title="Sites" middle="Site" main="Dashboard" />
-      <CreateSite refreshTableMode={refreshTableMode} />
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Sites"
+          middle="Site"
+          middleUrl="Sites"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openCreateSite}>
+          <i className="bi bi-plus-square"></i> Create Site
+        </button>
+      </div>
+      {showCreateSite && <CreateSite refreshTableMode={refreshTableMode} />}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

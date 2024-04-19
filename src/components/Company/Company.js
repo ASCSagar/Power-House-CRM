@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ajaxCall from "../../helpers/ajaxCall";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
-import EditIcon from "../../UI/Icons/EditIcon";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import Table from "../../UI/Table/Table";
@@ -11,6 +10,11 @@ import CreateCompany from "./CreateCompany";
 const Company = () => {
   const [companyData, setCompanyData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [showCreateCompany, setShowCreateCompany] = useState(false);
+
+  const openCreateCompany = () => {
+    setShowCreateCompany((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -36,26 +40,16 @@ const Company = () => {
         if (response?.status === 200) {
           setCompanyData(response?.data);
         } else {
-          console.log("error");
+          console.error("error");
         }
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     })();
   }, [refreshTable]);
 
-  const editCompany = (params) => (
-    <Link
-      to={`/companies/edit/${params.data.id}`}
-      className="enquiryAction"
-      title="Edit Company"
-    >
-      <EditIcon />
-    </Link>
-  );
-
   const companyDashboard = (params) => (
-    <Link to={`/companies/${params.data.id}`}>{params.value}</Link>
+    <Link to={`/company/${params.data.id}`}>{params.value}</Link>
   );
 
   const renderItemAvailable = ({ value }) => {
@@ -63,12 +57,6 @@ const Company = () => {
   };
 
   const columns = [
-    {
-      headerClass: "ag-grid-header",
-      resizable: false,
-      width: 60,
-      cellRenderer: editCompany,
-    },
     {
       headerName: "Company Name",
       field: "name",
@@ -175,8 +163,20 @@ const Company = () => {
 
   return (
     <main id="main" className="main">
-      <Breadcrumbs title="Companies" middle="Company" main="Dashboard" />
-      <CreateCompany refreshTableMode={refreshTableMode} />
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Companies"
+          middle="Company"
+          middleUrl="Companies"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openCreateCompany}>
+          <i className="bi bi-plus-square"></i> Create Company
+        </button>
+      </div>
+      {showCreateCompany && (
+        <CreateCompany refreshTableMode={refreshTableMode} />
+      )}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">

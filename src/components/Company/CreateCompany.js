@@ -218,7 +218,7 @@ const CreateCompany = ({ refreshTableMode }) => {
               role="tabpanel"
               aria-labelledby="1-tab"
             >
-              <div className="row g-3 mt-1">
+              <div className="row mt-2">
                 <div className="col-md-4">
                   <label className="form-label">Company Name</label>
                   <input
@@ -261,9 +261,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Number Of Employee</label>
                   <input
                     type="number"
@@ -277,7 +275,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Registration Number</label>
                   <input
                     type="number"
@@ -291,7 +289,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Estimated Turnover</label>
                   <input
                     type="number"
@@ -306,10 +304,8 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
                 <Select
-                  className="col-md-4"
+                  className="col-md-4 mt-2"
                   label="Company Type"
                   name="business_type"
                   isSearch={true}
@@ -353,7 +349,7 @@ const CreateCompany = ({ refreshTableMode }) => {
               role="tabpanel"
               aria-labelledby="2-tab"
             >
-              <div className="row g-3 mt-1">
+              <div className="row mt-2">
                 <div className="col-md-4">
                   <label className="form-label">Address Line 1</label>
                   <input
@@ -396,9 +392,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Post Code</label>
                   <input
                     type="number"
@@ -412,7 +406,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Country</label>
                   <input
                     type="text"
@@ -434,7 +428,7 @@ const CreateCompany = ({ refreshTableMode }) => {
               role="tabpanel"
               aria-labelledby="3-tab"
             >
-              <div className="row g-3 mt-1">
+              <div className="row mt-1">
                 <div className="col-md-4">
                   <label className="form-label">Account Name</label>
                   <input
@@ -477,9 +471,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Short Code</label>
                   <input
                     type="text"
@@ -493,7 +485,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">SIC Code</label>
                   <input
                     type="text"
@@ -515,7 +507,7 @@ const CreateCompany = ({ refreshTableMode }) => {
               role="tabpanel"
               aria-labelledby="4-tab"
             >
-              <div className="row g-3 mt-1">
+              <div className="row mt-2">
                 <div className="col-md-4">
                   <label className="form-label">Partner Name</label>
                   <input
@@ -558,9 +550,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Home PostCode</label>
                   <input
                     type="text"
@@ -574,7 +564,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Time At Address (Years)</label>
                   <input
                     type="number"
@@ -588,7 +578,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Time At Address (Months)</label>
                   <input
                     type="number"
@@ -610,7 +600,7 @@ const CreateCompany = ({ refreshTableMode }) => {
               role="tabpanel"
               aria-labelledby="5-tab"
             >
-              <div className="row g-3 mt-1">
+              <div className="row mt-2">
                 <div className="col-md-4">
                   <label className="form-label">First Name</label>
                   <input
@@ -661,9 +651,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     name="contact_title"
                   />
                 </div>
-              </div>
-              <div className="row g-3 mt-2">
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Position</label>
                   <input
                     type="text"
@@ -677,7 +665,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Telephone Number</label>
                   <input
                     type="number"
@@ -691,7 +679,7 @@ const CreateCompany = ({ refreshTableMode }) => {
                     }
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mt-2">
                   <label className="form-label">Email</label>
                   <input
                     type="email"

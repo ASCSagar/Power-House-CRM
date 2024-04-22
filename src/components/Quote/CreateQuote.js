@@ -156,7 +156,7 @@ const CreateQuote = ({ refreshTableMode }) => {
       <div className="card-body">
         <h5 className="card-title">Create Quote</h5>
         <form onSubmit={createQuote}>
-          <div className="row g-3 mt-1">
+          <div className="row mt-2">
             <Select
               className="col-md-3"
               label="Site Name"
@@ -211,9 +211,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-          </div>
-          <div className="row g-3 mt-2">
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Day Rate (pence/kWh)</label>
               <input
                 type="number"
@@ -224,7 +222,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Night Rate (pence/kWh)</label>
               <input
                 type="number"
@@ -235,7 +233,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Standing Charge (pence)</label>
               <input
                 type="number"
@@ -249,7 +247,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">KVA Charge (pence)</label>
               <input
                 type="number"
@@ -260,9 +258,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-          </div>
-          <div className="row g-3 mt-2">
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Additional Charge(£)</label>
               <input
                 type="number"
@@ -276,7 +272,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Extra Info</label>
               <input
                 type="text"
@@ -287,7 +283,7 @@ const CreateQuote = ({ refreshTableMode }) => {
                 }
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3 mt-2">
               <label className="form-label">Up Lift</label>
               <input
                 type="number"

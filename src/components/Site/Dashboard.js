@@ -6,6 +6,7 @@ import ajaxCall from "../../helpers/ajaxCall";
 import SmallModal from "../../UI/Modal/Modal";
 import Details from "./Details";
 import Table from "../../UI/Table/Table";
+import SupplyDetail from "./SupplyDetails/SupplyDetail";
 
 const tabs = [
   { id: "1", title: "Quotes" },
@@ -174,30 +175,32 @@ const SiteDashboard = () => {
                       </Tab>
                     ))}
                   </ul>
-                  <div
-                    className="tab-pane fade show active"
-                    id="bordered-1"
-                    role="tabpanel"
-                    aria-labelledby="1-tab"
-                  >
-                    {siteQuotes.length > 0 ? (
-                      <div className="mt-4">
-                        <Table
-                          rowData={siteQuotes}
-                          columnDefs={columns}
-                        ></Table>
-                      </div>
-                    ) : (
-                      <div className="text-center text-danger mt-4">{`No Quotes Available For This ${siteData.site_name} Site !!`}</div>
-                    )}
-                  </div>
-                  <div
-                    className="tab-pane fade"
-                    id="bordered-2"
-                    role="tabpanel"
-                    aria-labelledby="2-tab"
-                  >
-                    Supply Details
+                  <div className="tab-content pt-2" id="borderedTabContent">
+                    <div
+                      className="tab-pane fade show active"
+                      id="bordered-1"
+                      role="tabpanel"
+                      aria-labelledby="1-tab"
+                    >
+                      {siteQuotes.length > 0 ? (
+                        <div className="mt-4">
+                          <Table
+                            rowData={siteQuotes}
+                            columnDefs={columns}
+                          ></Table>
+                        </div>
+                      ) : (
+                        <div className="text-center text-danger mt-4">{`No Quotes Available For This ${siteData.site_name} Site !!`}</div>
+                      )}
+                    </div>
+                    <div
+                      className="tab-pane fade"
+                      id="bordered-2"
+                      role="tabpanel"
+                      aria-labelledby="2-tab"
+                    >
+                      <SupplyDetail />
+                    </div>
                   </div>
                 </div>
               </div>

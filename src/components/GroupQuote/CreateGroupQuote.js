@@ -32,7 +32,7 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CreateGroupQuote = ({refreshTableMode}) => {
+const CreateGroupQuote = ({ refreshTableMode }) => {
   const [groupQuoteData, dispatchGroupQuote] = useReducer(
     reducerGroupQuote,
     initialGroupQuotesData
@@ -157,7 +157,7 @@ const CreateGroupQuote = ({refreshTableMode}) => {
     <div className="card">
       <div className="card-body">
         <h5 className="card-title">Create Group Quote</h5>
-        <form className="row g-3" onSubmit={createGroupSite}>
+        <form className="row" onSubmit={createGroupSite}>
           <Select
             className="col-md-3"
             label="Group"
@@ -212,106 +212,102 @@ const CreateGroupQuote = ({refreshTableMode}) => {
               }
             />
           </div>
-          <div className="row g-3 mt-2">
-            <div className="col-md-3">
-              <label className="form-label">Day Rate (pence/kWh)</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.day_rate}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "day_rate",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Night Rate (pence/kWh)</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.night_rate}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "night_rate",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Standing Charge (pence)</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.standing_charge}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "standing_charge",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">KVA Charge (pence)</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.kva_charge}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "kva_charge",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Day Rate (pence/kWh)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.day_rate}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "day_rate",
+                  value: e.target.value,
+                })
+              }
+            />
           </div>
-          <div className="row g-3 mt-2">
-            <div className="col-md-3">
-              <label className="form-label">Additional Charge(£)</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.additional_charge}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "additional_charge",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Extra Info</label>
-              <input
-                type="text"
-                className="form-control"
-                value={groupQuoteData.extra_info}
-                onChange={(e) =>
-                  dispatchGroupQuote({
-                    type: "extra_info",
-                    value: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Up Lift</label>
-              <input
-                type="number"
-                className="form-control"
-                value={groupQuoteData.up_lift}
-                onChange={(e) =>
-                  dispatchGroupQuote({ type: "up_lift", value: e.target.value })
-                }
-              />
-            </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Night Rate (pence/kWh)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.night_rate}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "night_rate",
+                  value: e.target.value,
+                })
+              }
+            />
           </div>
-          <div className="mt-4">
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Standing Charge (pence)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.standing_charge}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "standing_charge",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">KVA Charge (pence)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.kva_charge}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "kva_charge",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Additional Charge(£)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.additional_charge}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "additional_charge",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Extra Info</label>
+            <input
+              type="text"
+              className="form-control"
+              value={groupQuoteData.extra_info}
+              onChange={(e) =>
+                dispatchGroupQuote({
+                  type: "extra_info",
+                  value: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div className="col-md-3 mt-2">
+            <label className="form-label">Up Lift</label>
+            <input
+              type="number"
+              className="form-control"
+              value={groupQuoteData.up_lift}
+              onChange={(e) =>
+                dispatchGroupQuote({ type: "up_lift", value: e.target.value })
+              }
+            />
+          </div>
+          <div className="mt-2">
             <div className="form-check form-switch mt-2">
               <input
                 className="form-check-input"

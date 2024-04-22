@@ -306,7 +306,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 role="tabpanel"
                 aria-labelledby="1-tab"
               >
-                <div className="row g-3 mt-1">
+                <div className="row mt-2">
                   <div className="col-md-3">
                     <label className="form-label">Site Name</label>
                     <input
@@ -365,9 +365,7 @@ const CreateSite = ({ refreshTableMode }) => {
                     objKey={["group_name"]}
                     url="sites/groups/"
                   />
-                </div>
-                <div className="row g-3 mt-2">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Type Of Owner</label>
                     <input
                       type="text"
@@ -381,7 +379,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Owner Name</label>
                     <input
                       type="text"
@@ -395,7 +393,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">
                       Current Gas & Electricity Supplier Details
                     </label>
@@ -415,7 +413,7 @@ const CreateSite = ({ refreshTableMode }) => {
                     />
                   </div>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 d-flex flex-wrap gap-3">
                   <div className="form-check form-switch mt-1">
                     <input
                       className="form-check-input"
@@ -485,7 +483,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 aria-labelledby="2-tab"
               >
                 <div
-                  className="row g-3 mt-1"
+                  className="row mt-2"
                   onClick={() => setIsModalOpen(true)}
                 >
                   <div className="col-md-4">
@@ -530,9 +528,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                </div>
-                <div className="row g-3 mt-2">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Address Line 4</label>
                     <input
                       type="text"
@@ -546,7 +542,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Post Code</label>
                     <input
                       type="text"
@@ -560,7 +556,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Country</label>
                     <input
                       type="text"
@@ -596,7 +592,7 @@ const CreateSite = ({ refreshTableMode }) => {
                     Is Billing Address Same As Site Address ?
                   </label>
                 </div>
-                <div className="row g-3 mt-1">
+                <div className="row mt-2">
                   <div className="col-md-4">
                     <label className="form-label">Address Line 1</label>
                     <input
@@ -639,9 +635,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                </div>
-                <div className="row g-3 mt-2">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Address Line 4</label>
                     <input
                       type="text"
@@ -655,7 +649,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Post Code</label>
                     <input
                       type="text"
@@ -669,7 +663,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Country</label>
                     <input
                       type="text"
@@ -685,7 +679,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 role="tabpanel"
                 aria-labelledby="4-tab"
               >
-                <div className="row g-3 mt-1">
+                <div className="row mt-2">
                   <div className="col-md-4">
                     <label className="form-label">Site Reference</label>
                     <input
@@ -729,9 +723,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                </div>
-                <div className="row g-3 mt-2">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Notes</label>
                     <input
                       type="text"
@@ -745,7 +737,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Lead Type</label>
                     <SelectSearch
                       options={[
@@ -813,7 +805,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 role="tabpanel"
                 aria-labelledby="5-tab"
               >
-                <div className="row g-3 mt-1">
+                <div className="row mt-2">
                   <div className="col-md-4">
                     <label className="form-label">First Name</label>
                     <input
@@ -864,9 +856,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       name="contact_title"
                     />
                   </div>
-                </div>
-                <div className="row g-3 mt-2">
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Position</label>
                     <input
                       type="text"
@@ -880,7 +870,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Telephone Number</label>
                     <input
                       type="number"
@@ -894,7 +884,7 @@ const CreateSite = ({ refreshTableMode }) => {
                       }
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 mt-2">
                     <label className="form-label">Email</label>
                     <input
                       type="email"
@@ -916,7 +906,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 role="tabpanel"
                 aria-labelledby="6-tab"
               >
-                <div className="row g-3 mt-2">
+                <div className="row mt-2">
                   <div className="col-md-4">
                     <label className="form-label">Agent Email</label>
                     <input

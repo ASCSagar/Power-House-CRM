@@ -109,7 +109,7 @@ const CurrentSupplyGas = () => {
     })();
   }, [siteId]);
 
-  const doCSGas = async function (e) {
+  const doCSGas = async (e) => {
     e.preventDefault();
     setFormStatus({
       isError: false,

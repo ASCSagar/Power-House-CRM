@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import ajaxCall from "../../helpers/ajaxCall";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
@@ -48,6 +49,30 @@ const Site = () => {
     })();
   }, [refreshTable]);
 
+  const handleSiteEdit = async (siteId, fieldName, newValue) => {
+    try {
+      const response = await ajaxCall(`sites/update/site/${siteId}/`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("loginInfo"))?.accessToken
+          }`,
+        },
+        method: "PATCH",
+        body: JSON.stringify({ [fieldName]: newValue }),
+      });
+      if (response?.status === 200) {
+        toast.success("Site Data Update Successfully");
+        refreshTableMode();
+      } else {
+        toast.error("Something went wrong updating company data");
+      }
+    } catch (error) {
+      console.error("Error updating company data", error);
+    }
+  };
+
   const siteDashboard = (params) => (
     <Link to={`/site/${params.data.id}`}>{params.value}</Link>
   );
@@ -62,30 +87,53 @@ const Site = () => {
       field: "site_name",
       cellRenderer: siteDashboard,
       filter: true,
+      editable: true,
     },
-    { headerName: "Type Of Owner", field: "type_of_owner", filter: true },
-    { headerName: "Owner Name", field: "owner_name", filter: true },
-    { headerName: "Company", field: "company.name", filter: true },
-    { headerName: "Agent Email", field: "agent_email", filter: true },
+    {
+      headerName: "Type Of Owner",
+      field: "type_of_owner",
+      filter: true,
+      editable: true,
+    },
+    {
+      headerName: "Owner Name",
+      field: "owner_name",
+      filter: true,
+      editable: true,
+    },
+    {
+      headerName: "Company",
+      field: "company.name",
+      filter: true,
+    },
+    {
+      headerName: "Agent Email",
+      field: "agent_email",
+      filter: true,
+      editable: true,
+    },
     {
       headerName: "Bill To Sent",
       field: "bill_to_sent",
       cellRenderer: renderItemAvailable,
       filter: true,
+      editable: true,
     },
     {
       headerName: "Change Of Tenancy",
       field: "change_of_tenancy",
       cellRenderer: renderItemAvailable,
       filter: true,
+      editable: true,
     },
     {
       headerName: "Customer Consent",
       field: "customer_consent",
       cellRenderer: renderItemAvailable,
       filter: true,
+      editable: true,
     },
-    { headerName: "Notes", field: "notes", filter: true },
+    { headerName: "Notes", field: "notes", filter: true, editable: true },
   ];
 
   return (
@@ -101,14 +149,29 @@ const Site = () => {
           <i className="bi bi-plus-square"></i> Create Site
         </button>
       </div>
-      {showCreateSite && <CreateSite refreshTableMode={refreshTableMode} />}
+      {showCreateSite && (
+        <CreateSite
+          refreshTableMode={refreshTableMode}
+          setShowCreateSite={setShowCreateSite}
+        />
+      )}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Sites</h5>
-                <Table rowData={siteData} columnDefs={columns} />
+                <Table
+                  rowData={siteData}
+                  columnDefs={columns}
+                  onCellValueChanged={(params) =>
+                    handleSiteEdit(
+                      params.data.id,
+                      params.colDef.field,
+                      params.newValue
+                    )
+                  }
+                />
               </div>
             </div>
           </div>

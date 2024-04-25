@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
@@ -45,6 +46,30 @@ const Note = () => {
     })();
   }, [refreshTable]);
 
+  const handleNoteEdit = async (noteId, fieldName, newValue) => {
+    try {
+      const response = await ajaxCall(`notes/note/${noteId}/`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("loginInfo"))?.accessToken
+          }`,
+        },
+        method: "PATCH",
+        body: JSON.stringify({ [fieldName]: newValue }),
+      });
+      if (response?.status === 200) {
+        toast.success("Note Data Updated Successfully");
+        refreshTableMode();
+      } else {
+        toast.error("Something went wrong updating note data");
+      }
+    } catch (error) {
+      console.error("Error updating note data", error);
+    }
+  };
+
   const columns = [
     {
       headerName: "Site Name",
@@ -55,11 +80,13 @@ const Note = () => {
       headerName: "Site Note",
       field: "site_notes",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Company Note",
       field: "company_notes",
       filter: true,
+      editable: true,
     },
   ];
 
@@ -83,7 +110,17 @@ const Note = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Notes</h5>
-                <Table rowData={noteData} columnDefs={columns} />
+                <Table
+                  rowData={noteData}
+                  columnDefs={columns}
+                  onCellValueChanged={(params) =>
+                    handleNoteEdit(
+                      params.data.id,
+                      params.colDef.field,
+                      params.newValue
+                    )
+                  }
+                />
               </div>
             </div>
           </div>

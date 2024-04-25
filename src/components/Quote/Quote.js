@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
@@ -47,6 +48,30 @@ const Quote = () => {
     })();
   }, [refreshTable]);
 
+  const handleQuoteEdit = async (quoteId, fieldName, newValue) => {
+    try {
+      const response = await ajaxCall(`quote/generate-quote/${quoteId}/`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("loginInfo"))?.accessToken
+          }`,
+        },
+        method: "PATCH",
+        body: JSON.stringify({ [fieldName]: newValue }),
+      });
+      if (response?.status === 200) {
+        toast.success("Quote Data Update Successfully");
+        refreshTableMode();
+      } else {
+        toast.error("Something went wrong updating company data");
+      }
+    } catch (error) {
+      console.error("Error updating company data", error);
+    }
+  };
+
   const renderItemAvailable = ({ value }) => {
     return value ? <CheckIcon /> : <CancelIcon />;
   };
@@ -61,57 +86,68 @@ const Quote = () => {
       headerName: "Supplier",
       field: "supplier",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Product",
       field: "product",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Term",
       field: "term",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Day Rate (pence/kWh)",
       field: "day_rate",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Night Rate (pence/kWh)",
       field: "night_rate",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Standing Charge (pence)",
       field: "standing_charge",
       filter: true,
+      editable: true,
     },
     {
       headerName: "KVA Charge (pence)",
       field: "kva_charge",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Additional Charge(£)",
       field: "additional_charge",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Extra info",
       field: "extra_info",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Up Lift",
       field: "up_lift",
       filter: true,
+      editable: true,
     },
     {
       headerName: "Rates Already Include At Uplift",
       field: "rates_already_include_at_uplift",
       filter: true,
       cellRenderer: renderItemAvailable,
+      editable: true,
     },
   ];
 
@@ -135,7 +171,17 @@ const Quote = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Quotes</h5>
-                <Table rowData={quoteData} columnDefs={columns} />
+                <Table
+                  rowData={quoteData}
+                  columnDefs={columns}
+                  onCellValueChanged={(params) => {
+                    handleQuoteEdit(
+                      params.data.id,
+                      params.colDef.field,
+                      params.newValue
+                    );
+                  }}
+                />
               </div>
             </div>
           </div>

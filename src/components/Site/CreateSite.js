@@ -93,10 +93,12 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CreateSite = ({ refreshTableMode }) => {
+const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
   const [siteData, dispatchSite] = useReducer(siteReducer, initialSiteData);
   const [formStatus, setFormStatus] = useState(initialSubmit);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log("---siteCompany-->", siteData.company);
 
   const handleSiteAddress = (data) => {
     dispatchSite({
@@ -124,6 +126,12 @@ const CreateSite = ({ refreshTableMode }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleCloseCreateSite = () => {
+    resetReducerForm();
+    refreshTableMode();
+    setShowCreateSite(false);
   };
 
   const validateForm = () => {
@@ -266,8 +274,7 @@ const CreateSite = ({ refreshTableMode }) => {
         8000
       );
       if ([200, 201].includes(response.status)) {
-        resetReducerForm();
-        refreshTableMode();
+        handleCloseCreateSite();
         toast.success("Site Created Successfully");
       } else if ([400, 404].includes(response.status)) {
         toast.error("Some Problem Occurred. Please try again.");
@@ -286,7 +293,15 @@ const CreateSite = ({ refreshTableMode }) => {
     <>
       <div className="card">
         <div className="card-body">
-          <h5 className="card-title">Create Site</h5>
+          <div className="d-flex justify-content-between align-items-center">
+            <h5 className="card-title">Create Site</h5>
+            <button
+              className="btn btn-primary"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <i className="bi bi-plus-square"></i> Search
+            </button>
+          </div>
           <ul
             className="nav nav-tabs nav-tabs-bordered"
             id="borderedTab"
@@ -482,10 +497,7 @@ const CreateSite = ({ refreshTableMode }) => {
                 role="tabpanel"
                 aria-labelledby="2-tab"
               >
-                <div
-                  className="row mt-2"
-                  onClick={() => setIsModalOpen(true)}
-                >
+                <div className="row mt-2">
                   <div className="col-md-4">
                     <label className="form-label">Address Line 1</label>
                     <input

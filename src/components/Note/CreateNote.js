@@ -1,5 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import Select from "../../UI/Select/Select";
 import ajaxCall from "../../helpers/ajaxCall";
@@ -25,36 +24,8 @@ const reducerNote = (state, action) => {
 };
 
 const CreateNote = ({ refreshTableMode }) => {
-  const navigate = useNavigate();
-  const noteId = useParams().noteId;
   const [noteData, dispatchNote] = useReducer(reducerNote, initialNoteData);
   const [formStatus, setFormStatus] = useState(initialSubmit);
-
-  useEffect(() => {
-    (async () => {
-      if (noteId) {
-        try {
-          const response = await ajaxCall(
-            `notes/note/${noteId}/`,
-            {
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${
-                  JSON.parse(localStorage.getItem("loginInfo"))?.accessToken
-                }`,
-              },
-              method: "GET",
-            },
-            8000
-          );
-          dispatchNote({ type: "reset", payload: response.data });
-        } catch (error) {
-          console.error("Error fetching note data:", error);
-        }
-      }
-    })();
-  }, [noteId]);
 
   const validateForm = () => {
     if (!noteData.select_site) {
@@ -100,8 +71,8 @@ const CreateNote = ({ refreshTableMode }) => {
       isSubmitting: true,
     });
     try {
-      const url = noteId ? `notes/note/${noteId}/` : "notes/note/";
-      const method = noteId ? "PATCH" : "POST";
+      const url = "notes/note/";
+      const method = "POST";
       const response = await ajaxCall(
         url,
         {
@@ -120,10 +91,7 @@ const CreateNote = ({ refreshTableMode }) => {
       if ([200, 201].includes(response.status)) {
         resetReducerForm();
         refreshTableMode();
-        toast.success(`Note ${noteId ? "Updated" : "Created"} Successfully`);
-        if (noteId) {
-          navigate("/Notes");
-        }
+        toast.success("Note Created Successfully");
       } else if ([400, 404].includes(response.status)) {
         toast.error(response.data.select_site[0]);
       }
@@ -140,7 +108,7 @@ const CreateNote = ({ refreshTableMode }) => {
   return (
     <div className="card">
       <div className="card-body">
-        <h5 className="card-title">{noteId ? "Edit Note" : "Add Note"}</h5>
+        <h5 className="card-title">Add Note</h5>
         <form className="row g-3" onSubmit={createNote}>
           <Select
             className="col-md-4"
@@ -192,17 +160,14 @@ const CreateNote = ({ refreshTableMode }) => {
               <div className="text-success mb-2">{formStatus.errMsg}</div>
             )}
             {formStatus.isSubmitting ? (
-              <Loading
-                color="primary"
-                text={noteId ? "Updating Note..." : "Creating Note..."}
-              />
+              <Loading color="primary" text={"Creating Note..."} />
             ) : (
               <button
                 type="submit"
                 className="btn btn-primary"
                 disabled={formStatus.isSubmitting}
               >
-                {noteId ? "Update Note" : "Create Note"}
+                Create Note
               </button>
             )}
           </div>

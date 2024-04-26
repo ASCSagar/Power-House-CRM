@@ -98,9 +98,8 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
   const [formStatus, setFormStatus] = useState(initialSubmit);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log("---siteCompany-->", siteData.company);
-
   const handleSiteAddress = (data) => {
+    console.log("---->", data);
     dispatchSite({
       type: "siteAddressLine1",
       value: data.addressMatch.address.addressBreakdown[0],
@@ -121,6 +120,19 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
       type: "sitePostCode",
       value: data.postCode,
     });
+    if (data.matchedElectricity) {
+      dispatchSite({
+        type: "lead_type",
+        value: "ELECTRICITY",
+      });
+    }
+    if (data.matchedGas) {
+      dispatchSite({
+        type: "lead_type",
+        value: "GAS",
+      });
+    }
+    localStorage.setItem("MPAN_ID", JSON.stringify(data.mpanId));
     setIsModalOpen(false);
   };
 
@@ -747,24 +759,6 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                           value: e.target.value,
                         })
                       }
-                    />
-                  </div>
-                  <div className="col-md-4 mt-2">
-                    <label className="form-label">Lead Type</label>
-                    <SelectSearch
-                      options={[
-                        { name: "GAS", value: "GAS" },
-                        { name: "ELECTRICITY", value: "ELECTRICITY" },
-                      ]}
-                      placeholder="Choose from options"
-                      value={siteData.lead_type}
-                      onChange={(val) => {
-                        dispatchSite({
-                          type: "lead_type",
-                          value: val,
-                        });
-                      }}
-                      name="lead_type"
                     />
                   </div>
                 </div>

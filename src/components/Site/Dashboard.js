@@ -7,17 +7,24 @@ import SmallModal from "../../UI/Modal/Modal";
 import Details from "./Details";
 import Table from "../../UI/Table/Table";
 import SupplyDetail from "./SupplyDetails/SupplyDetail";
-
-const tabs = [
-  { id: "1", title: "Quotes" },
-  { id: "2", title: "Supply Details" },
-];
+import MeterDetail from "./MeterDetails/MeterDetail";
 
 const SiteDashboard = () => {
   const { siteId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenMD, setIsOpenMD] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [siteQuotes, setSiteQuotes] = useState([]);
+
+  const tabs = [
+    { id: "1", title: "Quotes" },
+    {
+      id: "2",
+      title: `Supply Details (${
+        siteData.lead_typeype === "GAS" ? "Gas" : "Electricity"
+      })`,
+    },
+  ];
 
   useEffect(() => {
     (async () => {
@@ -159,10 +166,18 @@ const SiteDashboard = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between">
                     <h5 className="card-title">{siteData?.site_name}</h5>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => setIsModalOpen(true)}
-                    >{`View ${siteData?.site_name} Details`}</button>
+                    <div className="d-flex align-items-center gap-3">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setIsOpenMD(true)}
+                      >
+                        View MpanID Details
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setIsModalOpen(true)}
+                      >{`View ${siteData?.site_name} Details`}</button>
+                    </div>
                   </div>
                   <ul
                     className="nav nav-tabs nav-tabs-bordered"
@@ -199,7 +214,7 @@ const SiteDashboard = () => {
                       role="tabpanel"
                       aria-labelledby="2-tab"
                     >
-                      <SupplyDetail />
+                      <SupplyDetail leadType={siteData.lead_type} />
                     </div>
                   </div>
                 </div>
@@ -216,6 +231,15 @@ const SiteDashboard = () => {
         title={`${siteData?.site_name} Details`}
       >
         <Details siteData={siteData} />
+      </SmallModal>
+      <SmallModal
+        size="xl"
+        centered
+        isOpen={isOpenMD}
+        onClose={() => setIsOpenMD(false)}
+        title="MpanID Details"
+      >
+        <MeterDetail />
       </SmallModal>
     </>
   );

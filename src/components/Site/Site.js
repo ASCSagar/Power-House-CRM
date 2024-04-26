@@ -103,8 +103,11 @@ const Site = () => {
     },
     {
       headerName: "Company",
-      field: "company.name",
+      field: "company",
       filter: true,
+      valueGetter: (params) => {
+        return params.data?.company?.name;
+      },
     },
     {
       headerName: "Agent Email",

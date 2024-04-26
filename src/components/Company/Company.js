@@ -177,6 +177,20 @@ const Company = () => {
     {
       name: "Partner DOB",
       field: "partner_dob",
+      cellRenderer: (params) => (
+        <input
+          type="date"
+          className="form-control"
+          value={params.value}
+          onChange={(e) =>
+            handleCompanyEdit(
+              params.data.id,
+              params.colDef.field,
+              e.target.value
+            )
+          }
+        />
+      ),
       filter: true,
       editable: true,
     },

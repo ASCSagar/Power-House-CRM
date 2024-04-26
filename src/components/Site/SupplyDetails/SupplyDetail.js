@@ -6,33 +6,47 @@ import MeterDetailsElectricity from "./Electricity/MeterDetailsElectricity";
 import CurrentSupplyElectricity from "./Electricity/CurrentSupplyElectricity";
 import NewSupplyElectricity from "./Electricity/NewSupplyElectricity";
 
-const SupplyDetail = () => {
-  const [activeTab, setActiveTab] = useState("mGas");
+const SupplyDetail = ({ leadType }) => {
+  const defaultTab = leadType === "GAS" ? "mGas" : "mElectricity";
+  const [activeTab, setActiveTab] = useState(defaultTab);
 
-  const tabs = [
-    { id: "mGas", title: "Meter Details (Gas)", component: <MeterDetailGas /> },
+  const gasTabs = [
+    {
+      id: "mGas",
+      title: "Meter Details",
+      component: <MeterDetailGas />,
+    },
     {
       id: "cGas",
-      title: "Current Supply (Gas)",
+      title: "Current Supply",
       component: <CurrentSupplyGas />,
     },
-    { id: "contact", title: "New Supply (Gas)", component: <NewSupplyGas /> },
+    {
+      id: "nGas",
+      title: "New Supply",
+      component: <NewSupplyGas />,
+    },
+  ];
+
+  const electricityTabs = [
     {
       id: "mElectricity",
-      title: "Meter Details (Electricity)",
+      title: "Meter Details",
       component: <MeterDetailsElectricity />,
     },
     {
       id: "cElectricity",
-      title: "Current Supply (Electricity)",
+      title: "Current Supply",
       component: <CurrentSupplyElectricity />,
     },
     {
       id: "nElectricity",
-      title: "New Supply (Electricity)",
+      title: "New Supply",
       component: <NewSupplyElectricity />,
     },
   ];
+
+  const tabs = leadType === "GAS" ? gasTabs : electricityTabs;
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);

@@ -203,7 +203,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
           <label className="form-label">Post Code</label>
           <div className="d-flex gap-3">
             <input
-              type="email"
+              type="text"
               className="form-control"
               value={apiData.s_postcode}
               onChange={(e) =>
@@ -215,7 +215,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
             />
             <div className="text-center">
               {formStatus.isSubmitting ? (
-                <Loading color="primary" text={"Searching..."} />
+                <Loading color="primary" />
               ) : (
                 <button
                   type="submit"

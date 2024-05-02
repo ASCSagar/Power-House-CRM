@@ -1,14 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MeterDetailGas from "./Gas/MeterDetailGas";
 import CurrentSupplyGas from "./Gas/CurrentSupplyGas";
 import NewSupplyGas from "./Gas/NewSupplyGas";
 import MeterDetailsElectricity from "./Electricity/MeterDetailsElectricity";
 import CurrentSupplyElectricity from "./Electricity/CurrentSupplyElectricity";
 import NewSupplyElectricity from "./Electricity/NewSupplyElectricity";
+import ajaxCall from "../../../helpers/ajaxCall";
 
 const SupplyDetail = ({ leadType }) => {
   const defaultTab = leadType === "GAS" ? "mGas" : "mElectricity";
+
+  const mpanID = JSON.parse(localStorage.getItem("MPAN_ID"));
+
   const [activeTab, setActiveTab] = useState(defaultTab);
+  const [meterDetails, setMeterDetails] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await ajaxCall(
+          "lookup/Property/SearchByPropertyAddressId/",
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("loginInfo"))?.accessToken
+              }`,
+            },
+            method: "POST",
+            body: JSON.stringify({
+              query: mpanID,
+              isQueryTicket: true,
+            }),
+          },
+          8000
+        );
+        if (response?.status === 200) {
+          if (leadType === "GAS") {
+            setMeterDetails(response?.data?.gasInfo);
+          } else {
+            setMeterDetails(response?.data?.elecInfo[0]);
+          }
+        } else {
+          console.error("error");
+        }
+      } catch (error) {
+        console.error("error", error);
+      }
+    })();
+  }, [leadType, mpanID]);
 
   const gasTabs = [
     {
@@ -32,12 +73,12 @@ const SupplyDetail = ({ leadType }) => {
     {
       id: "mElectricity",
       title: "Meter Details",
-      component: <MeterDetailsElectricity />,
+      component: <MeterDetailsElectricity meterDetails={meterDetails} />,
     },
     {
       id: "cElectricity",
       title: "Current Supply",
-      component: <CurrentSupplyElectricity />,
+      component: <CurrentSupplyElectricity meterDetails={meterDetails} />,
     },
     {
       id: "nElectricity",

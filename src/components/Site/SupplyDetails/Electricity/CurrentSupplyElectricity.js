@@ -46,7 +46,7 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CurrentSupplyElectricity = () => {
+const CurrentSupplyElectricity = ({ meterDetails }) => {
   const { siteId } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -114,14 +114,20 @@ const CurrentSupplyElectricity = () => {
                 response.data.electric_usage_rate.annual_night_usage,
               night_rate: response.data.electric_usage_rate.night_rate,
             };
-            dispatchCSElectricityData({ type: "reset", payload: responseData });
+            dispatchCSElectricityData({
+              type: "reset",
+              payload: {
+                ...responseData,
+                e_supplier: meterDetails.currentSupplier,
+              },
+            });
           }
         } catch (error) {
           console.error("Error fetching note data:", error);
         }
       }
     })();
-  }, [siteId]);
+  }, [meterDetails.currentSupplier, siteId]);
 
   const doCSElectricity = async (e) => {
     e.preventDefault();

@@ -34,7 +34,7 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const MeterDetailsElectricity = () => {
+const MeterDetailsElectricity = ({ meterDetails }) => {
   const { siteId } = useParams();
   const navigate = useNavigate();
   const [meterElectricityData, dispatchMeterElectricityData] = useReducer(
@@ -67,16 +67,25 @@ const MeterDetailsElectricity = () => {
             },
             8000
           );
+          const { pc, mtc, llf } = meterDetails;
+          const mpanTopLine = `${pc}${mtc}${llf}`;
+
           dispatchMeterElectricityData({
             type: "reset",
-            payload: response.data,
+            payload: {
+              ...response.data,
+              e_mpan_topline: mpanTopLine,
+              e_mpan_bottomline: meterDetails.mpan,
+              e_meter_type: meterDetails.meters[0]?.meterType || "",
+              e_smart_meter: meterDetails.meters[0]?.isSmart,
+            },
           });
         } catch (error) {
           console.error("Error fetching note data:", error);
         }
       }
     })();
-  }, [siteId]);
+  }, [meterDetails, siteId]);
 
   const doMDE = async (e) => {
     e.preventDefault();

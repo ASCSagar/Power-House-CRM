@@ -99,7 +99,6 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSiteAddress = (data) => {
-    console.log("---->", data);
     dispatchSite({
       type: "siteAddressLine1",
       value: data.addressMatch.address.addressBreakdown[0],

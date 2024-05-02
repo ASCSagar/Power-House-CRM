@@ -7,12 +7,10 @@ import SmallModal from "../../UI/Modal/Modal";
 import Details from "./Details";
 import Table from "../../UI/Table/Table";
 import SupplyDetail from "./SupplyDetails/SupplyDetail";
-import MeterDetail from "./MeterDetails/MeterDetail";
 
 const SiteDashboard = () => {
   const { siteId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOpenMD, setIsOpenMD] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [siteQuotes, setSiteQuotes] = useState([]);
 
@@ -21,7 +19,7 @@ const SiteDashboard = () => {
     {
       id: "2",
       title: `Supply Details (${
-        siteData.lead_typeype === "GAS" ? "Gas" : "Electricity"
+        siteData.lead_type === "GAS" ? "Gas" : "Electricity"
       })`,
     },
   ];
@@ -169,12 +167,6 @@ const SiteDashboard = () => {
                     <div className="d-flex align-items-center gap-3">
                       <button
                         className="btn btn-primary"
-                        onClick={() => setIsOpenMD(true)}
-                      >
-                        View MpanID Details
-                      </button>
-                      <button
-                        className="btn btn-primary"
                         onClick={() => setIsModalOpen(true)}
                       >{`View ${siteData?.site_name} Details`}</button>
                     </div>
@@ -231,15 +223,6 @@ const SiteDashboard = () => {
         title={`${siteData?.site_name} Details`}
       >
         <Details siteData={siteData} />
-      </SmallModal>
-      <SmallModal
-        size="xl"
-        centered
-        isOpen={isOpenMD}
-        onClose={() => setIsOpenMD(false)}
-        title="MpanID Details"
-      >
-        <MeterDetail />
       </SmallModal>
     </>
   );

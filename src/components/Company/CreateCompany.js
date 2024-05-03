@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
+import moment from "moment";
 import Tab from "../../UI/Tab/Tab";
 import Select from "../../UI/Select/Select";
 import SelectSearch from "react-select-search";
@@ -18,16 +19,16 @@ const initialCompanyData = {
   name: "",
   parent_company: "",
   reference: "",
-  number_of_employees: "",
+  number_of_employees: 0,
   registrationNo: "",
-  estimated_turnover: "",
+  estimated_turnover: 0,
   business_type: "",
   is_macro_business: false,
 
   addressline1_company: "",
   addressline2_company: "",
   addressline3_company: "",
-  postcode: "",
+  postcode: 0,
   country_of_company: "",
 
   account_name: "",
@@ -37,11 +38,11 @@ const initialCompanyData = {
   sic_code: "",
 
   partner_name: "",
-  partner_dob: "",
+  partner_dob: moment().format("YYYY-MM-DD"),
   address: "",
   home_post_code: "",
-  time_at_address_months: "",
-  time_at_address_years: "",
+  time_at_address_months: 0,
+  time_at_address_years: 0,
 
   first_name: "",
   last_name: "",
@@ -70,16 +71,34 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CreateCompany = ({ refreshTableMode }) => {
+const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
   const [companyData, dispatchCompany] = useReducer(
     companyReducer,
     initialCompanyData
   );
   const [formStatus, setFormStatus] = useState(initialSubmit);
 
+  const handleCloseCreateCompany = () => {
+    resetReducerForm();
+    refreshTableMode();
+    setShowCreateCompany(false);
+  };
+
   const validateForm = () => {
     if (!companyData.name) {
       setFormError("Company Name is Required");
+      return false;
+    }
+    if (!companyData.first_name) {
+      setFormError("First Name is Required");
+      return false;
+    }
+    if (!companyData.last_name) {
+      setFormError("First Name is Required");
+      return false;
+    }
+    if (!companyData.email) {
+      setFormError("Email is Required");
       return false;
     }
     setFormStatus({
@@ -178,11 +197,9 @@ const CreateCompany = ({ refreshTableMode }) => {
         8000
       );
       if ([200, 201].includes(response.status)) {
-        resetReducerForm();
-        refreshTableMode();
+        handleCloseCreateCompany();
         toast.success("Company Created Successfully");
       } else if ([400, 404].includes(response.status)) {
-        resetReducerForm();
         toast.error("Some Problem Occurred. Please try again.");
       }
     } catch (error) {

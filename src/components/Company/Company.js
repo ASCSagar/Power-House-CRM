@@ -234,7 +234,7 @@ const Company = () => {
         </button>
       </div>
       {showCreateCompany && (
-        <CreateCompany refreshTableMode={refreshTableMode} />
+        <CreateCompany refreshTableMode={refreshTableMode} setShowCreateCompany={setShowCreateCompany} />
       )}
       <section className="section">
         <div className="row">

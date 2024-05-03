@@ -46,7 +46,7 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const CurrentSupplyElectricity = ({ meterDetails }) => {
+const CurrentSupplyElectricity = ({ EleDetails }) => {
   const { siteId } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -84,50 +84,49 @@ const CurrentSupplyElectricity = ({ meterDetails }) => {
             },
             8000
           );
-          if (response.status === 200) {
-            const responseData = {
-              e_supplier: response.data.e_supplier,
-              e_product: response.data.e_product,
-              e_contract_type: response.data.e_contract_type,
-              e_won_date: response.data.e_won_date,
-              e_contract_start_date: response.data.e_contract_start_date,
-              e_contract_end_date: response.data.e_contract_end_date,
-              e_contract_length_months: response.data.e_contract_length_months,
-              e_contract_back_date: response.data.e_contract_back_date,
-              e_supplier_reference: response.data.e_supplier_reference,
-              e_supplier_information1: response.data.e_supplier_information1,
-              e_supplier_information2: response.data.e_supplier_information2,
-              e_supplier_information3: response.data.e_supplier_information3,
-              e_agent: response.data.e_agent,
-              e_customer: response.data.e_customer,
-              stading_charge: response.data.electric_usage_rate.stading_charge,
-              standing_charge_uplift:
-                response.data.electric_usage_rate.standing_charge_uplift,
-              kva_rate: response.data.electric_usage_rate.kva_rate,
-              unit_rate_uplift:
-                response.data.electric_usage_rate.unit_rate_uplift,
-              feed_in_tariff: response.data.electric_usage_rate.feed_in_tariff,
-              annual_day_usage:
-                response.data.electric_usage_rate.annual_day_usage,
-              day_rate: response.data.electric_usage_rate.day_rate,
-              annual_night_usage:
-                response.data.electric_usage_rate.annual_night_usage,
-              night_rate: response.data.electric_usage_rate.night_rate,
-            };
-            dispatchCSElectricityData({
-              type: "reset",
-              payload: {
-                ...responseData,
-                e_supplier: meterDetails.currentSupplier,
-              },
-            });
-          }
+
+          const responseData = {
+            e_supplier: response.data.e_supplier,
+            e_product: response.data.e_product,
+            e_contract_type: response.data.e_contract_type,
+            e_won_date: response.data.e_won_date,
+            e_contract_start_date: response.data.e_contract_start_date,
+            e_contract_end_date: response.data.e_contract_end_date,
+            e_contract_length_months: response.data.e_contract_length_months,
+            e_contract_back_date: response.data.e_contract_back_date,
+            e_supplier_reference: response.data.e_supplier_reference,
+            e_supplier_information1: response.data.e_supplier_information1,
+            e_supplier_information2: response.data.e_supplier_information2,
+            e_supplier_information3: response.data.e_supplier_information3,
+            e_agent: response.data.e_agent,
+            e_customer: response.data.e_customer,
+            stading_charge: response.data.electric_usage_rate.stading_charge,
+            standing_charge_uplift:
+              response.data.electric_usage_rate.standing_charge_uplift,
+            kva_rate: response.data.electric_usage_rate.kva_rate,
+            unit_rate_uplift:
+              response.data.electric_usage_rate.unit_rate_uplift,
+            feed_in_tariff: response.data.electric_usage_rate.feed_in_tariff,
+            annual_day_usage:
+              response.data.electric_usage_rate.annual_day_usage,
+            day_rate: response.data.electric_usage_rate.day_rate,
+            annual_night_usage:
+              response.data.electric_usage_rate.annual_night_usage,
+            night_rate: response.data.electric_usage_rate.night_rate,
+          };
+          dispatchCSElectricityData({
+            type: "reset",
+            payload: {
+              ...responseData,
+              e_supplier: EleDetails?.currentSupplier,
+            },
+          });
         } catch (error) {
           console.error("Error fetching note data:", error);
         }
       }
     })();
-  }, [meterDetails.currentSupplier, siteId]);
+  }, [EleDetails, siteId]);
 
   const doCSElectricity = async (e) => {
     e.preventDefault();

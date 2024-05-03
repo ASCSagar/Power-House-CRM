@@ -28,6 +28,7 @@ const initialSiteData = {
   tenant: false,
   vacant: false,
   change_of_tenancy: false,
+  mpan_id: "",
 
   siteAddressLine1: "",
   siteAddressLine2: "",
@@ -50,8 +51,8 @@ const initialSiteData = {
   lead_source: "",
   notes: "",
   lead_type: "",
-  bill_to_sent: "",
-  welcome_letter_send: "",
+  bill_to_sent: false,
+  welcome_letter_send: false,
 
   first_name: "",
   last_name: "",
@@ -119,6 +120,10 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
       type: "sitePostCode",
       value: data.postCode,
     });
+    dispatchSite({
+      type: "mpan_id",
+      value: data.mpanId,
+    });
     if (data.matchedElectricity) {
       dispatchSite({
         type: "lead_type",
@@ -131,7 +136,6 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
         value: "GAS",
       });
     }
-    localStorage.setItem("MPAN_ID", JSON.stringify(data.mpanId));
     setIsModalOpen(false);
   };
 
@@ -148,6 +152,30 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
   const validateForm = () => {
     if (!siteData.site_name) {
       setFormError("Site Name is Required");
+      return false;
+    }
+    if (!siteData.company) {
+      setFormError("Company Name is Required");
+      return false;
+    }
+    if (
+      !siteData.siteAddressLine1 &&
+      !siteData.siteAddressLine2 &&
+      !siteData.siteAddressLine3 &&
+      !siteData.siteAddressLine4 &&
+      !siteData.sitePostCode
+    ) {
+      setFormError("Site Address is Required");
+      return false;
+    }
+    if (
+      !siteData.billingAddressLine1 &&
+      !siteData.billingAddressLine2 &&
+      !siteData.billingAddressLine3 &&
+      !siteData.billingAddressLine4 &&
+      !siteData.billingPostCode
+    ) {
+      setFormError("Billing Address is Required");
       return false;
     }
     setFormStatus({
@@ -191,6 +219,7 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
       tenant: siteData.tenant,
       vacant: siteData.vacant,
       change_of_tenancy: siteData.change_of_tenancy,
+      mpan_id: siteData.mpan_id,
 
       site_reference: siteData.site_reference,
       support_contact: siteData.support_contact,

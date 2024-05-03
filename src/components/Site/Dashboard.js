@@ -206,7 +206,10 @@ const SiteDashboard = () => {
                       role="tabpanel"
                       aria-labelledby="2-tab"
                     >
-                      <SupplyDetail leadType={siteData.lead_type} />
+                      <SupplyDetail
+                        leadType={siteData.lead_type}
+                        MpanID={siteData.mpan_id}
+                      />
                     </div>
                   </div>
                 </div>

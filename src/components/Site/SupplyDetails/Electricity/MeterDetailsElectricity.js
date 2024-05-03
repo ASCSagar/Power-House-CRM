@@ -10,7 +10,7 @@ const initialMDE = {
   e_meter_type: "",
   e_serial_number: "",
   e_capacity: "",
-  e_voltage: "",
+  e_voltage: 0,
   e_measurement_class: "",
   e_smart_meter: false,
   e_related_meter: false,
@@ -34,7 +34,7 @@ const initialSubmit = {
   isSubmitting: false,
 };
 
-const MeterDetailsElectricity = ({ meterDetails }) => {
+const MeterDetailsElectricity = ({ EleDetails }) => {
   const { siteId } = useParams();
   const navigate = useNavigate();
   const [meterElectricityData, dispatchMeterElectricityData] = useReducer(
@@ -67,7 +67,7 @@ const MeterDetailsElectricity = ({ meterDetails }) => {
             },
             8000
           );
-          const { pc, mtc, llf } = meterDetails;
+          const { pc, mtc, llf } = EleDetails;
           const mpanTopLine = `${pc}${mtc}${llf}`;
 
           dispatchMeterElectricityData({
@@ -75,9 +75,9 @@ const MeterDetailsElectricity = ({ meterDetails }) => {
             payload: {
               ...response.data,
               e_mpan_topline: mpanTopLine,
-              e_mpan_bottomline: meterDetails.mpan,
-              e_meter_type: meterDetails.meters[0]?.meterType || "",
-              e_smart_meter: meterDetails.meters[0]?.isSmart,
+              e_mpan_bottomline: EleDetails?.mpan,
+              e_meter_type: EleDetails?.meters[0]?.meterType || "",
+              e_smart_meter: EleDetails?.meters[0]?.isSmart,
             },
           });
         } catch (error) {
@@ -85,7 +85,7 @@ const MeterDetailsElectricity = ({ meterDetails }) => {
         }
       }
     })();
-  }, [meterDetails, siteId]);
+  }, [EleDetails, siteId]);
 
   const doMDE = async (e) => {
     e.preventDefault();

@@ -7,13 +7,11 @@ import CurrentSupplyElectricity from "./Electricity/CurrentSupplyElectricity";
 import NewSupplyElectricity from "./Electricity/NewSupplyElectricity";
 import ajaxCall from "../../../helpers/ajaxCall";
 
-const SupplyDetail = ({ leadType }) => {
+const SupplyDetail = ({ leadType, MpanID }) => {
   const defaultTab = leadType === "GAS" ? "mGas" : "mElectricity";
-
-  const mpanID = JSON.parse(localStorage.getItem("MPAN_ID"));
-
   const [activeTab, setActiveTab] = useState(defaultTab);
-  const [meterDetails, setMeterDetails] = useState([]);
+  const [gasDetails, setGasDetails] = useState([]);
+  const [electricityDetails, setElectricityDetails] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -30,7 +28,7 @@ const SupplyDetail = ({ leadType }) => {
             },
             method: "POST",
             body: JSON.stringify({
-              query: mpanID,
+              query: MpanID,
               isQueryTicket: true,
             }),
           },
@@ -38,9 +36,9 @@ const SupplyDetail = ({ leadType }) => {
         );
         if (response?.status === 200) {
           if (leadType === "GAS") {
-            setMeterDetails(response?.data?.gasInfo);
+            setGasDetails(response?.data?.gasInfo);
           } else {
-            setMeterDetails(response?.data?.elecInfo[0]);
+            setElectricityDetails(response?.data?.elecInfo[0]);
           }
         } else {
           console.error("error");
@@ -49,18 +47,18 @@ const SupplyDetail = ({ leadType }) => {
         console.error("error", error);
       }
     })();
-  }, [leadType, mpanID]);
+  }, [leadType, MpanID]);
 
   const gasTabs = [
     {
       id: "mGas",
       title: "Meter Details",
-      component: <MeterDetailGas />,
+      component: <MeterDetailGas gasDetails={gasDetails} />,
     },
     {
       id: "cGas",
       title: "Current Supply",
-      component: <CurrentSupplyGas />,
+      component: <CurrentSupplyGas gasDetails={gasDetails} />,
     },
     {
       id: "nGas",
@@ -73,12 +71,12 @@ const SupplyDetail = ({ leadType }) => {
     {
       id: "mElectricity",
       title: "Meter Details",
-      component: <MeterDetailsElectricity meterDetails={meterDetails} />,
+      component: <MeterDetailsElectricity EleDetails={electricityDetails} />,
     },
     {
       id: "cElectricity",
       title: "Current Supply",
-      component: <CurrentSupplyElectricity meterDetails={meterDetails} />,
+      component: <CurrentSupplyElectricity EleDetails={electricityDetails} />,
     },
     {
       id: "nElectricity",

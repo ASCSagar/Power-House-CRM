@@ -7,10 +7,12 @@ import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import Table from "../../UI/Table/Table";
 import CreateCompany from "./CreateCompany";
+import Loading from "../../UI/Loading/Loading";
 
 const Company = () => {
   const [companyData, setCompanyData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [showCreateCompany, setShowCreateCompany] = useState(false);
 
   const openCreateCompany = () => {
@@ -22,6 +24,7 @@ const Company = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       try {
         const response = await ajaxCall(
@@ -40,8 +43,10 @@ const Company = () => {
         );
         if (response?.status === 200) {
           setCompanyData(response?.data);
+          setIsLoading(false);
         } else {
-          console.error("error");
+         toast.error("Some Problem Occurred. Please try again.");
+         setIsLoading(false);
         }
       } catch (error) {
         console.error("error", error);
@@ -234,7 +239,10 @@ const Company = () => {
         </button>
       </div>
       {showCreateCompany && (
-        <CreateCompany refreshTableMode={refreshTableMode} setShowCreateCompany={setShowCreateCompany} />
+        <CreateCompany
+          refreshTableMode={refreshTableMode}
+          setShowCreateCompany={setShowCreateCompany}
+        />
       )}
       <section className="section">
         <div className="row">
@@ -242,17 +250,25 @@ const Company = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Companies</h5>
-                <Table
-                  rowData={companyData}
-                  columnDefs={columns}
-                  onCellValueChanged={(params) =>
-                    handleCompanyEdit(
-                      params.data.id,
-                      params.colDef.field,
-                      params.newValue
-                    )
-                  }
-                />
+                {isLoading ? (
+                  <Loading color="primary" text="Loading..." />
+                ) : companyData?.length > 0 ? (
+                  <Table
+                    rowData={companyData}
+                    columnDefs={columns}
+                    onCellValueChanged={(params) =>
+                      handleCompanyEdit(
+                        params.data.id,
+                        params.colDef.field,
+                        params.newValue
+                      )
+                    }
+                  />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Companies Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>

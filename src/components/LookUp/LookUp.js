@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useMemo, useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import ajaxCall from "../../helpers/ajaxCall";
 import { AgGridReact } from "ag-grid-react";
@@ -31,6 +31,10 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
   const [addressData, setAddressData] = useState([]);
   const [apiData, dispatchapiData] = useReducer(reducer, initialDetails);
   const [formStatus, setFormStatus] = useState(initialSubmit);
+
+  const paginationPageSizeSelector = useMemo(() => {
+    return [10, 20, 30];
+  }, []);
 
   const validateForm = () => {
     if (!apiData.s_postcode) {
@@ -113,7 +117,6 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
     {
       headerCheckboxSelection: true,
       checkboxSelection: true,
-      headerClass: "ag-grid-header",
       resizable: false,
       width: 60,
     },
@@ -187,6 +190,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
     columnDefs: columns,
     pagination: true,
     paginationPageSize: 10,
+    paginationPageSizeSelector: paginationPageSizeSelector,
     domLayout: "autoHeight",
     defaultColDef: {
       sortable: true,

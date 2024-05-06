@@ -110,17 +110,23 @@ const Note = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Notes</h5>
-                <Table
-                  rowData={noteData}
-                  columnDefs={columns}
-                  onCellValueChanged={(params) =>
-                    handleNoteEdit(
-                      params.data.id,
-                      params.colDef.field,
-                      params.newValue
-                    )
-                  }
-                />
+                {noteData?.length > 0 ? (
+                  <Table
+                    rowData={noteData}
+                    columnDefs={columns}
+                    onCellValueChanged={(params) =>
+                      handleNoteEdit(
+                        params.data.id,
+                        params.colDef.field,
+                        params.newValue
+                      )
+                    }
+                  />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Notes Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>

@@ -94,11 +94,19 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
       return false;
     }
     if (!companyData.last_name) {
-      setFormError("First Name is Required");
+      setFormError("Last Name is Required");
       return false;
     }
     if (!companyData.email) {
       setFormError("Email is Required");
+      return false;
+    }
+    if (!companyData.position) {
+      setFormError("Position is Required");
+      return false;
+    }
+    if (!companyData.telephone_number) {
+      setFormError("Telephone Number is Required");
       return false;
     }
     setFormStatus({
@@ -236,6 +244,20 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
               aria-labelledby="1-tab"
             >
               <div className="row mt-2">
+              <div className="col-md-4">
+                  <label className="form-label">Parent Company</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={companyData.parent_company}
+                    onChange={(e) =>
+                      dispatchCompany({
+                        type: "parent_company",
+                        value: e.target.value,
+                      })
+                    }
+                  />
+                </div>
                 <div className="col-md-4">
                   <label className="form-label">Company Name</label>
                   <input
@@ -245,20 +267,6 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
                     onChange={(e) =>
                       dispatchCompany({
                         type: "name",
-                        value: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Parent Company</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={companyData.parent_company}
-                    onChange={(e) =>
-                      dispatchCompany({
-                        type: "parent_company",
                         value: e.target.value,
                       })
                     }

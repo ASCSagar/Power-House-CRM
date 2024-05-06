@@ -164,24 +164,30 @@ const Quote = () => {
           <i className="bi bi-plus-square"></i> Create Quote
         </button>
       </div>
-      {showCreateQuote && <CreateQuote refreshTableMode={refreshTableMode} />}
+      {showCreateQuote && <CreateQuote refreshTableMode={refreshTableMode} setShowCreateQuote={setShowCreateQuote} />}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Quotes</h5>
-                <Table
-                  rowData={quoteData}
-                  columnDefs={columns}
-                  onCellValueChanged={(params) => {
-                    handleQuoteEdit(
-                      params.data.id,
-                      params.colDef.field,
-                      params.newValue
-                    );
-                  }}
-                />
+                {quoteData?.length > 0 ? (
+                  <Table
+                    rowData={quoteData}
+                    columnDefs={columns}
+                    onCellValueChanged={(params) => {
+                      handleQuoteEdit(
+                        params.data.id,
+                        params.colDef.field,
+                        params.newValue
+                      );
+                    }}
+                  />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Quotes Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>

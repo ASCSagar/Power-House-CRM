@@ -91,7 +91,13 @@ const GroupQuote = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Group Quotes</h5>
-                <Table rowData={groupQuoteData} columnDefs={columns} />
+                {groupQuoteData?.length > 0 ? (
+                  <Table rowData={groupQuoteData} columnDefs={columns} />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Group Quotes Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>

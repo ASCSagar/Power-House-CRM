@@ -80,12 +80,6 @@ const SideBar = () => {
                 <span>Sites</span>
               </Link>
             </li>
-            <li>
-              <Link to="/GroupSites">
-                <i className="bi bi-circle"></i>
-                <span>Group Sites</span>
-              </Link>
-            </li>
           </ul>
         </li>
 
@@ -109,12 +103,6 @@ const SideBar = () => {
               <Link to="/Quotes">
                 <i className="bi bi-circle"></i>
                 <span>Quotes</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/GroupQuotes">
-                <i className="bi bi-circle"></i>
-                <span>Group Quotes</span>
               </Link>
             </li>
           </ul>

@@ -209,7 +209,13 @@ const Dashboard = () => {
                 <div className="card recent-sales overflow-auto">
                   <div className="card-body">
                     <h5 className="card-title">Recent Sites</h5>
-                    <Table rowData={siteData} columnDefs={siteColumns} />
+                    {siteData?.length > 0 ? (
+                      <Table rowData={siteData} columnDefs={siteColumns} />
+                    ) : (
+                      <h5 className="text-center text-danger">
+                        No Recent Sites Available !!
+                      </h5>
+                    )}
                   </div>
                 </div>
               </div>
@@ -218,7 +224,13 @@ const Dashboard = () => {
                 <div className="card top-selling overflow-auto">
                   <div className="card-body">
                     <h5 className="card-title">Recent Quotes</h5>
-                    <Table rowData={quoteData} columnDefs={quoteColumns} />
+                    {quoteData?.length > 0 ? (
+                      <Table rowData={quoteData} columnDefs={quoteColumns} />
+                    ) : (
+                      <h5 className="text-center text-danger">
+                        No Recent Quotes Available !!
+                      </h5>
+                    )}
                   </div>
                 </div>
               </div>

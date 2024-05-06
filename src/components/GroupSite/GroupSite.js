@@ -90,7 +90,13 @@ const GroupSite = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Group Sites</h5>
-                <Table rowData={groupSiteData} columnDefs={columns} />
+                {groupSiteData?.length > 0 ? (
+                  <Table rowData={groupSiteData} columnDefs={columns} />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Group Sites Available !!{" "}
+                  </h5>
+                )}
               </div>
             </div>
           </div>

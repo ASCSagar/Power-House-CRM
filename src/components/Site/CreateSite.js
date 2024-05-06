@@ -20,14 +20,12 @@ const tabs = [
 const initialSiteData = {
   site_name: "",
   company: "",
-  reference: "",
-  group_name: "",
-  type_of_owner: "",
   owner_name: "",
   current_gas_and_electricity_supplier_details: "",
-  tenant: false,
+  tenant: true,
   vacant: false,
   change_of_tenancy: false,
+  customer_consent: false,
   mpan_id: "",
 
   siteAddressLine1: "",
@@ -211,14 +209,12 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
     let sendData = {
       site_name: siteData.site_name,
       company: siteData.company,
-      reference: siteData.reference,
-      type_of_owner: siteData.type_of_owner,
-      group_name: siteData.group_name,
       current_gas_and_electricity_supplier_details:
         siteData.current_gas_and_electricity_supplier_details,
       tenant: siteData.tenant,
       vacant: siteData.vacant,
       change_of_tenancy: siteData.change_of_tenancy,
+      customer_consent: siteData.customer_consent,
       mpan_id: siteData.mpan_id,
 
       site_reference: siteData.site_reference,
@@ -362,22 +358,8 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                 aria-labelledby="1-tab"
               >
                 <div className="row mt-2">
-                  <div className="col-md-3">
-                    <label className="form-label">Site Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={siteData.site_name}
-                      onChange={(e) =>
-                        dispatchSite({
-                          type: "site_name",
-                          value: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
                   <Select
-                    className="col-md-3"
+                    className="col-md-4"
                     label="Company Name"
                     name="company"
                     isSearch={true}
@@ -391,51 +373,22 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                     objKey={["name"]}
                     url="sites/get/company_name/"
                   />
-                  <div className="col-md-3">
-                    <label className="form-label">Reference</label>
+                  <div className="col-md-4">
+                    <label className="form-label">Site Name</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={siteData.reference}
+                      value={siteData.site_name}
                       onChange={(e) =>
                         dispatchSite({
-                          type: "reference",
-                          value: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <Select
-                    className="col-md-3"
-                    label="Group Name"
-                    name="group_name"
-                    isSearch={true}
-                    value={siteData.group_name}
-                    onChange={(val) => {
-                      dispatchSite({
-                        type: "group_name",
-                        value: val,
-                      });
-                    }}
-                    objKey={["group_name"]}
-                    url="sites/groups/"
-                  />
-                  <div className="col-md-4 mt-2">
-                    <label className="form-label">Type Of Owner</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={siteData.type_of_owner}
-                      onChange={(e) =>
-                        dispatchSite({
-                          type: "type_of_owner",
+                          type: "site_name",
                           value: e.target.value,
                         })
                       }
                     />
                   </div>
                   <div className="col-md-4 mt-2">
-                    <label className="form-label">Owner Name</label>
+                    <label className="form-label">Tenant / Owner Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -529,6 +482,27 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                       COT
                     </label>
                   </div>
+                </div>
+                <div className="form-check form-switch mt-2">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckDefault"
+                    checked={siteData.customer_consent}
+                    onChange={(e) => {
+                      dispatchSite({
+                        type: "customer_consent",
+                        value: e.target.checked,
+                      });
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    for="flexSwitchCheckDefault"
+                  >
+                    Please Confirm Customer Consent Has Been Received To Be
+                    Contacted Regarding The Current Quote
+                  </label>
                 </div>
               </div>
               <div
@@ -733,7 +707,7 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
               >
                 <div className="row mt-2">
                   <div className="col-md-4">
-                    <label className="form-label">Site Reference</label>
+                    <label className="form-label">Reference</label>
                     <input
                       type="text"
                       className="form-control"
@@ -789,6 +763,24 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                       }
                     />
                   </div>
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Lead Type</label>
+                    <SelectSearch
+                      options={[
+                        { name: "GAS", value: "GAS" },
+                        { name: "ELECTRICITY", value: "ELECTRICITY" },
+                      ]}
+                      placeholder="Choose from options"
+                      value={siteData.lead_type}
+                      onChange={(val) => {
+                        dispatchSite({
+                          type: "lead_type",
+                          value: val,
+                        });
+                      }}
+                      name="lead_type"
+                    />
+                  </div>
                 </div>
                 <div className="mt-2">
                   <div className="form-check form-switch mt-1">
@@ -808,7 +800,7 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                       className="form-check-label"
                       for="flexSwitchCheckDefault"
                     >
-                      Bill to Sent
+                      Bill to Site
                     </label>
                   </div>
                   <div className="form-check form-switch mt-1">

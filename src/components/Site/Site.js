@@ -164,17 +164,23 @@ const Site = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Sites</h5>
-                <Table
-                  rowData={siteData}
-                  columnDefs={columns}
-                  onCellValueChanged={(params) =>
-                    handleSiteEdit(
-                      params.data.id,
-                      params.colDef.field,
-                      params.newValue
-                    )
-                  }
-                />
+                {siteData?.length > 0 ? (
+                  <Table
+                    rowData={siteData}
+                    columnDefs={columns}
+                    onCellValueChanged={(params) =>
+                      handleSiteEdit(
+                        params.data.id,
+                        params.colDef.field,
+                        params.newValue
+                      )
+                    }
+                  />
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Sites Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>

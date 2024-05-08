@@ -29,6 +29,7 @@ const reducer = (state, action) => {
 
 const LookUp = ({ onRowSelect, onCloseModal }) => {
   const [addressData, setAddressData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [apiData, dispatchapiData] = useReducer(reducer, initialDetails);
   const [formStatus, setFormStatus] = useState(initialSubmit);
 
@@ -66,6 +67,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
   const searchByPostCode = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+    setIsLoading(true);
     setFormStatus({
       isError: false,
       errMsg: null,
@@ -100,6 +102,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     } finally {
+      setIsLoading(false);
       setFormStatus({
         ...formStatus,
         isSubmitting: false,
@@ -235,7 +238,9 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
         </div>
       </div>
       <div className="mt-3">
-        {addressData.length > 0 ? (
+        {isLoading ? (
+          <Loading color="primary" text={"Loading ..."} />
+        ) : addressData.length > 0 ? (
           <div className="ag-theme-quartz">
             <AgGridReact {...gridOptions} />
           </div>

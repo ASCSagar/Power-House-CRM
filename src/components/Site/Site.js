@@ -7,10 +7,12 @@ import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import Table from "../../UI/Table/Table";
 import CreateSite from "./CreateSite";
+import Loading from "../../UI/Loading/Loading";
 
 const Site = () => {
   const [siteData, setSiteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [showCreateSite, setShowCreateSite] = useState(false);
 
   const openCreateSite = () => {
@@ -22,6 +24,7 @@ const Site = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       try {
         const response = await ajaxCall(
@@ -40,6 +43,7 @@ const Site = () => {
         );
         if (response?.status === 200) {
           setSiteData(response?.data);
+          setIsLoading(false);
         } else {
           console.error("error");
         }
@@ -164,7 +168,9 @@ const Site = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Sites</h5>
-                {siteData?.length > 0 ? (
+                {isLoading ? (
+                  <Loading color="primary" text="Loading..." />
+                ) : siteData?.length > 0 ? (
                   <Table
                     rowData={siteData}
                     columnDefs={columns}

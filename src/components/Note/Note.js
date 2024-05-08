@@ -4,10 +4,12 @@ import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
 import CreateNote from "./CreateNote";
+import Loading from "../../UI/Loading/Loading";
 
 const Note = () => {
   const [noteData, setNoteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [showCreateNote, setShowCreateNote] = useState(false);
 
   const openCreateNote = () => {
@@ -19,6 +21,7 @@ const Note = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       try {
         const response = await ajaxCall(
@@ -37,6 +40,7 @@ const Note = () => {
         );
         if (response?.status === 200) {
           setNoteData(response?.data);
+          setIsLoading(false);
         } else {
           console.error("error");
         }
@@ -110,7 +114,9 @@ const Note = () => {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Notes</h5>
-                {noteData?.length > 0 ? (
+                {isLoading ? (
+                  <Loading color="primary" text="Loading..." />
+                ) : noteData?.length > 0 ? (
                   <Table
                     rowData={noteData}
                     columnDefs={columns}

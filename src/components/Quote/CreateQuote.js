@@ -68,41 +68,6 @@ const CreateQuote = ({ refreshTableMode, setShowCreateQuote }) => {
     })();
   }, [quoteData.site]);
 
-  const handleQuotes = (data) => {
-    dispatchQuote({
-      type: "supplier",
-      value: data?.Supplier,
-    });
-    dispatchQuote({
-      type: "product",
-      value: siteData?.lead_type,
-    });
-    dispatchQuote({
-      type: "term",
-      value: data?.Term,
-    });
-    dispatchQuote({
-      type: "day_rate",
-      value: data?.DayUnitrate,
-    });
-    dispatchQuote({
-      type: "night_rate",
-      value: data?.NightUnitrate,
-    });
-    dispatchQuote({
-      type: "standing_charge",
-      value: data?.StandingCharge,
-    });
-    dispatchQuote({
-      type: "extra_info",
-      value: data?.ExtraInfo || "--",
-    });
-    dispatchQuote({
-      type: "up_lift",
-      value: data?.Uplift,
-    });
-  };
-
   const handleCloseCreateQuote = () => {
     resetReducerForm();
     refreshTableMode();
@@ -213,7 +178,6 @@ const CreateQuote = ({ refreshTableMode, setShowCreateQuote }) => {
                 isSearch={true}
                 value={quoteData.site}
                 onChange={(val) => {
-                  console.log(val);
                   dispatchQuote({
                     type: "site",
                     value: val,
@@ -398,7 +362,6 @@ const CreateQuote = ({ refreshTableMode, setShowCreateQuote }) => {
       >
         <Rates
           siteID={quoteData.site}
-          onRowSelect={handleQuotes}
           setIsModalOpen={setIsModalOpen}
         />
       </SmallModal>

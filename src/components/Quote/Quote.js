@@ -6,10 +6,12 @@ import ajaxCall from "../../helpers/ajaxCall";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
 import CreateQuote from "./CreateQuote";
+import Loading from "../../UI/Loading/Loading";
 
 const Quote = () => {
   const [quoteData, setQuoteData] = useState([]);
   const [refreshTable, setRefreshTable] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [showCreateQuote, setShowCreateQuote] = useState(false);
 
   const openCreateQuote = () => {
@@ -21,6 +23,7 @@ const Quote = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       try {
         const response = await ajaxCall(
@@ -39,6 +42,7 @@ const Quote = () => {
         );
         if (response?.status === 200) {
           setQuoteData(response?.data);
+          setIsLoading(false);
         } else {
           console.error("error");
         }
@@ -164,14 +168,21 @@ const Quote = () => {
           <i className="bi bi-plus-square"></i> Create Quote
         </button>
       </div>
-      {showCreateQuote && <CreateQuote refreshTableMode={refreshTableMode} setShowCreateQuote={setShowCreateQuote} />}
+      {showCreateQuote && (
+        <CreateQuote
+          refreshTableMode={refreshTableMode}
+          setShowCreateQuote={setShowCreateQuote}
+        />
+      )}
       <section className="section">
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title">Quotes</h5>
-                {quoteData?.length > 0 ? (
+                {isLoading ? (
+                  <Loading color="primary" text="Loading..." />
+                ) : quoteData?.length > 0 ? (
                   <Table
                     rowData={quoteData}
                     columnDefs={columns}

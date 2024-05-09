@@ -94,12 +94,6 @@ const Site = () => {
       editable: true,
     },
     {
-      headerName: "Type Of Owner",
-      field: "type_of_owner",
-      filter: true,
-      editable: true,
-    },
-    {
       headerName: "Owner Name",
       field: "owner_name",
       filter: true,

@@ -3,23 +3,26 @@ import { toast } from "react-toastify";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
-import CheckIcon from "../../UI/Icons/CheckIcon";
-import CancelIcon from "../../UI/Icons/Cancel";
+import SmallModal from "../../UI/Modal/Modal";
+import Select from "../../UI/Select/Select";
 import CreateQuote from "./CreateQuote";
 import Loading from "../../UI/Loading/Loading";
 
 const Quote = () => {
+  const [site, setSite] = useState("");
   const [quoteData, setQuoteData] = useState([]);
-  const [refreshTable, setRefreshTable] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCreateQuote, setShowCreateQuote] = useState(false);
+  const [refreshTable, setRefreshTable] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openCreateQuote = () => {
-    setShowCreateQuote((prev) => !prev);
-  };
+  const tableData = quoteData.filter((item) => item.site === site);
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
+  };
+
+  const handleSiteChange = (selectedOption) => {
+    setSite(selectedOption);
   };
 
   useEffect(() => {
@@ -27,7 +30,7 @@ const Quote = () => {
     (async () => {
       try {
         const response = await ajaxCall(
-          "quote/generate-quote/",
+          "supplierdatagetview/",
           {
             headers: {
               Accept: "application/json",
@@ -52,9 +55,9 @@ const Quote = () => {
     })();
   }, [refreshTable]);
 
-  const handleQuoteEdit = async (quoteId, fieldName, newValue) => {
+  const handleEditSupplyData = async (id, fieldName, newValue) => {
     try {
-      const response = await ajaxCall(`quote/generate-quote/${quoteId}/`, {
+      const response = await ajaxCall(`supplierdatapatchview/${id}/`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -76,27 +79,11 @@ const Quote = () => {
     }
   };
 
-  const renderItemAvailable = ({ value }) => {
-    return value ? <CheckIcon /> : <CancelIcon />;
-  };
-
   const columns = [
-    {
-      headerName: "Site Name",
-      field: "site.site_name",
-      filter: true,
-    },
     {
       headerName: "Supplier",
       field: "supplier",
       filter: true,
-      editable: true,
-    },
-    {
-      headerName: "Product",
-      field: "product",
-      filter: true,
-      editable: true,
     },
     {
       headerName: "Term",
@@ -115,30 +102,24 @@ const Quote = () => {
       field: "night_rate",
       filter: true,
       editable: true,
+      width: 210,
     },
     {
       headerName: "Standing Charge (pence)",
       field: "standing_charge",
       filter: true,
       editable: true,
-    },
-    {
-      headerName: "KVA Charge (pence)",
-      field: "kva_charge",
-      filter: true,
-      editable: true,
-    },
-    {
-      headerName: "Additional Charge(£)",
-      field: "additional_charge",
-      filter: true,
-      editable: true,
+      width: 210,
     },
     {
       headerName: "Extra info",
       field: "extra_info",
       filter: true,
       editable: true,
+      width: 280,
+      valueGetter: (params) => {
+        return params.data?.extra_info || "--";
+      },
     },
     {
       headerName: "Up Lift",
@@ -146,65 +127,84 @@ const Quote = () => {
       filter: true,
       editable: true,
     },
-    {
-      headerName: "Rates Already Include At Uplift",
-      field: "rates_already_include_at_uplift",
-      filter: true,
-      cellRenderer: renderItemAvailable,
-      editable: true,
-    },
   ];
 
   return (
-    <main id="main" className="main">
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-        <Breadcrumbs
-          title="Quotes"
-          middle="Quote"
-          middleUrl="Quotes"
-          main="Dashboard"
-        />
-        <button className="btn btn-primary" onClick={openCreateQuote}>
-          <i className="bi bi-plus-square"></i> Create Quote
-        </button>
-      </div>
-      {showCreateQuote && (
-        <CreateQuote
-          refreshTableMode={refreshTableMode}
-          setShowCreateQuote={setShowCreateQuote}
-        />
-      )}
-      <section className="section">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Quotes</h5>
-                {isLoading ? (
-                  <Loading color="primary" text="Loading..." />
-                ) : quoteData?.length > 0 ? (
-                  <Table
-                    rowData={quoteData}
-                    columnDefs={columns}
-                    onCellValueChanged={(params) => {
-                      handleQuoteEdit(
-                        params.data.id,
-                        params.colDef.field,
-                        params.newValue
-                      );
-                    }}
+    <>
+      <main id="main" className="main">
+        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+          <Breadcrumbs
+            title="Quotes"
+            middle="Quote"
+            middleUrl="Quotes"
+            main="Dashboard"
+          />
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <i className="bi bi-plus-square"></i> Create Quote
+          </button>
+        </div>
+        <section className="section">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Quotes</h5>
+                  <Select
+                    className="col-4"
+                    label="Site Name"
+                    name="site"
+                    isSearch={true}
+                    objKey={["site_name"]}
+                    url="sites/get/site/"
+                    onChange={handleSiteChange}
                   />
-                ) : (
-                  <h5 className="text-center text-danger">
-                    No Quotes Available !!
-                  </h5>
-                )}
+                  {isLoading ? (
+                    <Loading color="primary" text="Loading..." />
+                  ) : tableData?.length > 0 ? (
+                    <div className="mt-3">
+                      <Table
+                        rowData={tableData}
+                        columnDefs={columns}
+                        onCellValueChanged={(params) => {
+                          handleEditSupplyData(
+                            params.data.id,
+                            params.colDef.field,
+                            params.newValue
+                          );
+                        }}
+                      />
+                    </div>
+                  ) : site === "" ? (
+                    <h5 className="text-center text-danger">
+                      Please Select Site For Quotes
+                    </h5>
+                  ) : (
+                    <h5 className="text-center text-danger">
+                      No Quotes Available !!
+                    </h5>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+      <SmallModal
+        size="xl"
+        centered
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Select Supplier For Quotation"
+      >
+        <CreateQuote
+          setIsModalOpen={setIsModalOpen}
+          refreshTableMode={refreshTableMode}
+        />
+      </SmallModal>
+    </>
   );
 };
 

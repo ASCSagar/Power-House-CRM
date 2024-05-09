@@ -2,8 +2,6 @@ import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Tab from "../../UI/Tab/Tab";
-import Select from "../../UI/Select/Select";
-import SelectSearch from "react-select-search";
 import ajaxCall from "../../helpers/ajaxCall";
 import Loading from "../../UI/Loading/Loading";
 
@@ -244,7 +242,7 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
               aria-labelledby="1-tab"
             >
               <div className="row mt-2">
-              <div className="col-md-4">
+                <div className="col-md-4">
                   <label className="form-label">Parent Company</label>
                   <input
                     type="text"
@@ -329,21 +327,32 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
                     }
                   />
                 </div>
-                <Select
-                  className="col-md-4 mt-2"
-                  label="Company Type"
-                  name="business_type"
-                  isSearch={true}
-                  value={companyData.business_type}
-                  onChange={(val) => {
-                    dispatchCompany({
-                      type: "business_type",
-                      value: val,
-                    });
-                  }}
-                  objKey={["name"]}
-                  url="company-types/"
-                />
+                <div className="col-md-4 mt-2">
+                  <label className="form-label">Company Type</label>
+                  <select
+                    className="form-select"
+                    value={companyData.business_type}
+                    onChange={(e) => {
+                      dispatchCompany({
+                        type: "business_type",
+                        value: e.target.value,
+                      });
+                    }}
+                  >
+                    <option selected value="1">
+                      LTD
+                    </option>
+                    <option value="2">PLC</option>
+                    <option value="3">LLP</option>
+                    <option value="4">LLC</option>
+                    <option value="5">Charity</option>
+                    <option value="6">Jersey Based</option>
+                    <option value="7">Public Sector</option>
+                    <option value="8">Non LTD</option>
+                    <option value="9">Partnership</option>
+                    <option value="10">Church / Community Organisation</option>
+                  </select>
+                </div>
               </div>
               <div className="mt-4">
                 <div className="form-check form-switch mt-1">
@@ -656,25 +665,26 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Contact Title</label>
-                  <SelectSearch
-                    options={[
-                      { name: "Sir", value: "Sir" },
-                      { name: "Mr", value: "Mr" },
-                      { name: "Ms", value: "Ms" },
-                      { name: "Mrs", value: "Mrs" },
-                      { name: "Miss", value: "Miss" },
-                      { name: "Dr", value: "Dr" },
-                    ]}
-                    placeholder="Choose from options"
+                  <select
+                    className="form-select"
                     value={companyData.contact_title}
-                    onChange={(val) => {
+                    onChange={(e) => {
                       dispatchCompany({
                         type: "contact_title",
-                        value: val,
+                        value: e.target.value,
                       });
                     }}
-                    name="contact_title"
-                  />
+                  >
+                    <option selected value="Dr">
+                      Dr
+                    </option>
+                    <option value="Miss">Miss</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Rev">Rev</option>
+                  </select>
                 </div>
                 <div className="col-md-4 mt-2">
                   <label className="form-label">Position</label>

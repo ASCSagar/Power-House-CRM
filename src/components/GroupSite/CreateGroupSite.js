@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import SelectSearch from "react-select-search";
 import Select from "../../UI/Select/Select";
 import MultiSelect from "../../UI/MultiSelect/MultiSelect";
 import ajaxCall from "../../helpers/ajaxCall";
@@ -151,20 +150,18 @@ const CreateGroupSite = ({ refreshTableMode }) => {
           />
           <div className="col-md-3">
             <label className="form-label">Group Type</label>
-            <SelectSearch
-              options={[
-                { name: "Basic Site Group", value: "BASIC" },
-                { name: "Multi Site Group", value: "MULTI" },
-              ]}
-              placeholder={"Select Options"}
+            <select
+              className="form-select"
               value={formData?.group_type}
-              onChange={(val) =>
+              onChange={(e) =>
                 setFormData((prev) => {
-                  return { ...prev, group_type: val };
+                  return { ...prev, group_type: e.target.value };
                 })
               }
-              name={"companyName"}
-            />
+            >
+              <option value="BASIC">Basic Site Group</option>
+              <option value="MULTI">Multi Site Group</option>
+            </select>
           </div>
           <div className="text-center">
             {formStatus.isError ? (

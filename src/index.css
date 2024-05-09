@@ -18,4 +18,6 @@ code {
 
 .select-search-input {
   height: 40px !important;
+  color: black !important;
+  background-color: #f6f9ff !important;
 }

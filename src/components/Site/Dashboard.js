@@ -7,12 +7,16 @@ import SmallModal from "../../UI/Modal/Modal";
 import Details from "./Details";
 import Table from "../../UI/Table/Table";
 import SupplyDetail from "./SupplyDetails/SupplyDetail";
+import Loading from "../../UI/Loading/Loading";
 
 const SiteDashboard = () => {
   const { siteId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [siteQuotes, setSiteQuotes] = useState([]);
+
+  const quotes = siteQuotes.filter((item) => item.site === parseInt(siteId));
 
   const tabs = [
     { id: "1", title: "Quotes" },
@@ -53,10 +57,11 @@ const SiteDashboard = () => {
   }, [siteId]);
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       try {
         const response = await ajaxCall(
-          `quote/generate-quote/?site=${siteId}`,
+          `supplierdatagetview/`,
           {
             headers: {
               Accept: "application/json",
@@ -71,6 +76,7 @@ const SiteDashboard = () => {
         );
         if (response?.status === 200) {
           setSiteQuotes(response?.data);
+          setIsLoading(false);
         } else {
           console.error("error");
         }
@@ -80,24 +86,10 @@ const SiteDashboard = () => {
     })();
   }, [siteId]);
 
-  const renderItemAvailable = ({ value }) => {
-    return value ? "Yes" : "No";
-  };
-
   const columns = [
-    {
-      headerName: "Site Name",
-      field: "site.site_name",
-      filter: true,
-    },
     {
       headerName: "Supplier",
       field: "supplier",
-      filter: true,
-    },
-    {
-      headerName: "Product",
-      field: "product",
       filter: true,
     },
     {
@@ -114,37 +106,27 @@ const SiteDashboard = () => {
       headerName: "Night Rate (pence/kWh)",
       field: "night_rate",
       filter: true,
+      width: 210,
     },
     {
       headerName: "Standing Charge (pence)",
       field: "standing_charge",
       filter: true,
-    },
-    {
-      headerName: "KVA Charge (pence)",
-      field: "kva_charge",
-      filter: true,
-    },
-    {
-      headerName: "Additional Charge(£)",
-      field: "additional_charge",
-      filter: true,
+      width: 210,
     },
     {
       headerName: "Extra info",
       field: "extra_info",
       filter: true,
+      width: 280,
+      valueGetter: (params) => {
+        return params.data?.extra_info || "--";
+      },
     },
     {
       headerName: "Up Lift",
       field: "up_lift",
       filter: true,
-    },
-    {
-      headerName: "Rates Already Include At Uplift",
-      field: "rates_already_include_at_uplift",
-      filter: true,
-      cellRenderer: renderItemAvailable,
     },
   ];
 
@@ -189,12 +171,11 @@ const SiteDashboard = () => {
                       role="tabpanel"
                       aria-labelledby="1-tab"
                     >
-                      {siteQuotes.length > 0 ? (
+                      {isLoading ? (
+                        <Loading color="primary" text="Loading..." />
+                      ) : quotes.length > 0 ? (
                         <div className="mt-4">
-                          <Table
-                            rowData={siteQuotes}
-                            columnDefs={columns}
-                          ></Table>
+                          <Table rowData={quotes} columnDefs={columns}></Table>
                         </div>
                       ) : (
                         <div className="text-center text-danger mt-4">{`No Quotes Available For This ${siteData.site_name} Site !!`}</div>

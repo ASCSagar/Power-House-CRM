@@ -1,7 +1,6 @@
 import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import Select from "../../UI/Select/Select";
-import SelectSearch from "react-select-search";
 import ajaxCall from "../../helpers/ajaxCall";
 import Tab from "../../UI/Tab/Tab";
 import SmallModal from "../../UI/Modal/Modal";
@@ -765,21 +764,21 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                   </div>
                   <div className="col-md-4 mt-2">
                     <label className="form-label">Lead Type</label>
-                    <SelectSearch
-                      options={[
-                        { name: "GAS", value: "GAS" },
-                        { name: "ELECTRICITY", value: "ELECTRICITY" },
-                      ]}
-                      placeholder="Choose from options"
+                    <select
+                      className="form-select"
                       value={siteData.lead_type}
-                      onChange={(val) => {
+                      onChange={(e) => {
                         dispatchSite({
                           type: "lead_type",
-                          value: val,
+                          value: e.target.value,
                         });
                       }}
-                      name="lead_type"
-                    />
+                    >
+                      <option selected value="ELECTRICITY">
+                        Electricity
+                      </option>
+                      <option value="GAS">Gas</option>
+                    </select>
                   </div>
                 </div>
                 <div className="mt-2">
@@ -862,25 +861,26 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">Contact Title</label>
-                    <SelectSearch
-                      options={[
-                        { name: "Sir", value: "Sir" },
-                        { name: "Mr", value: "Mr" },
-                        { name: "Ms", value: "Ms" },
-                        { name: "Mrs", value: "Mrs" },
-                        { name: "Miss", value: "Miss" },
-                        { name: "Dr", value: "Dr" },
-                      ]}
-                      placeholder="Choose from options"
+                    <select
+                      className="form-select"
                       value={siteData.contact_title}
-                      onChange={(val) => {
+                      onChange={(e) => {
                         dispatchSite({
                           type: "contact_title",
-                          value: val,
+                          value: e.target.value,
                         });
                       }}
-                      name="contact_title"
-                    />
+                    >
+                      <option selected value="Dr">
+                        Dr
+                      </option>
+                      <option value="Miss">Miss</option>
+                      <option value="Mr">Mr</option>
+                      <option value="Mrs">Mrs</option>
+                      <option value="Ms">Ms</option>
+                      <option value="Professor">Professor</option>
+                      <option value="Rev">Rev</option>
+                    </select>
                   </div>
                   <div className="col-md-4 mt-2">
                     <label className="form-label">Position</label>
@@ -949,21 +949,19 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">LOA Header To Use</label>
-                    <SelectSearch
-                      options={[
-                        { name: "Site Name", value: 1 },
-                        { name: "Company Name", value: 2 },
-                      ]}
-                      placeholder="Choose from options"
+                    <select
+                      className="form-control"
                       value={siteData.loa_header_to_use}
-                      onChange={(val) => {
+                      onChange={(e) => {
                         dispatchSite({
                           type: "loa_header_to_use",
-                          value: val,
+                          value: e.target.value,
                         });
                       }}
-                      name="loa_header_to_use"
-                    />
+                    >
+                      <option value="1">Site Name</option>
+                      <option value="2">Company Name</option>
+                    </select>
                   </div>
                   <Select
                     className="col-md-4"

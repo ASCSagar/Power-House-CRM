@@ -1234,3 +1234,24 @@ h6 {
   padding: 5px;
   font-weight: 500;
 }
+
+.ag-theme-quartz {
+  --ag-header-background-color: #f6f9ff !important;
+  --ag-odd-row-background-color: #f6f9ff !important;
+  --ag-header-column-resize-handle-color: #4154f1 !important;
+  --ag-borders: solid 2px !important;
+}
+
+@page {
+  margin: 15px;
+}
+
+.quoteContent {
+  display: none;
+}
+
+@media print {
+  .quoteContent {
+    display: block !important;
+  }
+}

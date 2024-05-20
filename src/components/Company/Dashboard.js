@@ -98,9 +98,7 @@ const CompanyDashboard = () => {
                     </button>
                   </div>
                   {companySites?.length > 0 ? (
-                    <div className="ag-theme-quartz">
-                      <Table rowData={companySites} columnDefs={columns} />
-                    </div>
+                    <Table rowData={companySites} columnDefs={columns} />
                   ) : (
                     <h5 className="text-center text-danger">
                       {`No Sites Available For ${companyData?.name} !!`}

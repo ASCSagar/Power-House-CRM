@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
+import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 
@@ -19,6 +20,9 @@ const Table = ({ rowData, columnDefs, onCellValueChanged }) => {
       sortable: true,
       resizable: true,
     },
+    sideBar:{
+      defaultToolPanel:"columns"
+    }
   };
 
   return (

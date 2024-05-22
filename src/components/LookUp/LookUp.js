@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useState } from "react";
+import React, { useMemo, useReducer, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import ajaxCall from "../../helpers/ajaxCall";
 import { AgGridReact } from "ag-grid-react";
@@ -28,14 +28,19 @@ const reducer = (state, action) => {
 };
 
 const LookUp = ({ onRowSelect, onCloseModal }) => {
-  const [addressData, setAddressData] = useState([]);
+  const [type, setType] = useState("Gas");
+  const [gasData, setGasData] = useState([]);
+  const [electricData, setElectricData] = useState([]);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiData, dispatchapiData] = useReducer(reducer, initialDetails);
+  const [apiData, dispatchApiData] = useReducer(reducer, initialDetails);
   const [formStatus, setFormStatus] = useState(initialSubmit);
 
-  const paginationPageSizeSelector = useMemo(() => {
-    return [10, 20, 30];
-  }, []);
+  const paginationPageSizeOptions = useMemo(() => [10, 20, 30], []);
+
+  useEffect(() => {
+    setData(type === "Gas" ? gasData : electricData);
+  }, [type, gasData, electricData]);
 
   const validateForm = () => {
     if (!apiData.s_postcode) {
@@ -50,10 +55,8 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
     return true;
   };
 
-  const resetReducerForm = () => {
-    dispatchapiData({
-      type: "reset",
-    });
+  const resetForm = () => {
+    dispatchApiData({ type: "reset" });
   };
 
   const setFormError = (errMsg) => {
@@ -68,11 +71,10 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsLoading(true);
-    setFormStatus({
-      isError: false,
-      errMsg: null,
+    setFormStatus((prevStatus) => ({
+      ...prevStatus,
       isSubmitting: true,
-    });
+    }));
     try {
       const response = await ajaxCall(
         "lookup/Property/SearchByPostcode/",
@@ -93,114 +95,116 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
         8000
       );
       if ([200, 201].includes(response.status)) {
-        resetReducerForm();
-        toast.success("Search Successfully");
-        setAddressData(response.data);
-      } else if ([400, 404].includes(response.status)) {
+        resetForm();
+        toast.success("Search Successful");
+        const gasResults = response.data.filter((item) => item.matchedGas);
+        const electricResults = response.data.filter(
+          (item) => item.matchedElectricity
+        );
+        setGasData(gasResults);
+        setElectricData(electricResults);
+      } else {
         toast.error("Some Problem Occurred. Please try again.");
       }
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     } finally {
       setIsLoading(false);
-      setFormStatus({
-        ...formStatus,
+      setFormStatus((prevStatus) => ({
+        ...prevStatus,
         isSubmitting: false,
-      });
+      }));
     }
   };
 
-  const renderItemAvailable = ({ value }) => {
-    return value ? <CheckIcon /> : <CancelIcon />;
-  };
+  const renderItemAvailable = ({ value }) =>
+    value ? <CheckIcon /> : <CancelIcon />;
 
-  let selectedRowData = null;
-
-  const columns = [
+  const commonColumns = [
     {
       headerCheckboxSelection: true,
       checkboxSelection: true,
       resizable: false,
       width: 60,
     },
-    {
-      headerName: "MPAN ID",
-      field: "mpanId",
-      filter: true,
-    },
-    {
-      headerName: "Electricity",
-      field: "matchedElectricity",
-      cellRenderer: renderItemAvailable,
-      filter: true,
-    },
-    {
-      headerName: "Gas",
-      field: "matchedGas",
-      cellRenderer: renderItemAvailable,
-      filter: true,
-    },
+    { headerName: "MPAN ID", field: "mpanId", filter: true },
     {
       headerName: "Address 1",
-      cellRenderer: (params) => {
-        const address1 = params.data.addressMatch?.address?.addressBreakdown[0];
-        return address1 || "";
-      },
+      cellRenderer: (params) =>
+        params.data.addressMatch?.address?.addressBreakdown[0] || "",
       filter: true,
     },
     {
       headerName: "Address 2",
-      cellRenderer: (params) => {
-        const address2 = params.data.addressMatch?.address?.addressBreakdown[1];
-        return address2 || "";
-      },
+      cellRenderer: (params) =>
+        params.data.addressMatch?.address?.addressBreakdown[1] || "",
       filter: true,
     },
     {
       headerName: "Address 3",
-      cellRenderer: (params) => {
-        const address3 = params.data.addressMatch?.address?.addressBreakdown[2];
-        return address3 || "";
-      },
+      cellRenderer: (params) =>
+        params.data.addressMatch?.address?.addressBreakdown[2] || "",
       filter: true,
     },
     {
       headerName: "Address 4",
-      cellRenderer: (params) => {
-        const address4 = params.data.addressMatch?.address?.addressBreakdown[3];
-        return address4 || "";
-      },
+      cellRenderer: (params) =>
+        params.data.addressMatch?.address?.addressBreakdown[3] || "",
       filter: true,
     },
-    {
-      headerName: "PostCode",
-      field: "postCode",
-      filter: true,
-    },
+    { headerName: "PostCode", field: "postCode", filter: true },
   ];
+
+  const gasColumn = {
+    headerName: "Gas",
+    field: "matchedGas",
+    cellRenderer: renderItemAvailable,
+    filter: true,
+  };
+
+  const electricityColumn = {
+    headerName: "Electricity",
+    field: "matchedElectricity",
+    cellRenderer: renderItemAvailable,
+    filter: true,
+  };
+
+  const columns = useMemo(() => {
+    const baseColumns = [
+      {
+        headerCheckboxSelection: true,
+        checkboxSelection: true,
+        resizable: false,
+        width: 60,
+      },
+      { headerName: "MPAN ID", field: "mpanId", filter: true },
+    ];
+
+    if (type === "Gas") {
+      return [...baseColumns, gasColumn, ...commonColumns.slice(2)];
+    } else {
+      return [...baseColumns, electricityColumn, ...commonColumns.slice(2)];
+    }
+  }, [type]);
 
   const onSelectionChanged = (event) => {
     const selectedNode = event.api.getSelectedNodes()[0];
-    selectedRowData = selectedNode ? selectedNode.data : null;
-    if (selectedRowData) {
-      onRowSelect(selectedRowData);
+    if (selectedNode) {
+      onRowSelect(selectedNode.data);
       onCloseModal();
     }
   };
 
   const gridOptions = {
-    rowData: addressData,
+    rowData: data,
     columnDefs: columns,
     pagination: true,
     paginationPageSize: 10,
-    paginationPageSizeSelector: paginationPageSizeSelector,
+    paginationPageSizeSelector: paginationPageSizeOptions,
     domLayout: "autoHeight",
-    defaultColDef: {
-      sortable: true,
-      resizable: true,
-    },
+    defaultColDef: { sortable: true, resizable: true },
     rowSelection: "single",
-    onSelectionChanged: onSelectionChanged,
+    onSelectionChanged,
   };
 
   return (
@@ -214,10 +218,7 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
               className="form-control"
               value={apiData.s_postcode}
               onChange={(e) =>
-                dispatchapiData({
-                  type: "s_postcode",
-                  value: e.target.value,
-                })
+                dispatchApiData({ type: "s_postcode", value: e.target.value })
               }
             />
             <div className="text-center">
@@ -237,10 +238,21 @@ const LookUp = ({ onRowSelect, onCloseModal }) => {
           </div>
         </div>
       </div>
+      <div className="d-flex justify-content-center gap-3 mt-3">
+        <button className="btn btn-primary" onClick={() => setType("Gas")}>
+          Gas
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => setType("Electricity")}
+        >
+          Electricity
+        </button>
+      </div>
       <div className="mt-3">
         {isLoading ? (
-          <Loading color="primary" text={"Loading ..."} />
-        ) : addressData.length > 0 ? (
+          <Loading color="primary" text="Loading ..." />
+        ) : data.length > 0 ? (
           <div className="ag-theme-quartz">
             <AgGridReact {...gridOptions} />
           </div>

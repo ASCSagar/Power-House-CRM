@@ -135,11 +135,6 @@ const Dashboard = () => {
       filter: true,
     },
     {
-      headerName: "Extra info",
-      field: "extra_info",
-      filter: true,
-    },
-    {
       headerName: "Up Lift",
       field: "up_lift",
       filter: true,

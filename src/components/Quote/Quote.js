@@ -4,9 +4,8 @@ import { toast } from "react-toastify";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
-import SmallModal from "../../UI/Modal/Modal";
 import Select from "../../UI/Select/Select";
-import CreateQuote from "./CreateQuote";
+import CreateQuotes from "./CreateQuotes";
 import Loading from "../../UI/Loading/Loading";
 import logo from "../../img/logo.png";
 
@@ -16,7 +15,7 @@ const Quote = () => {
   const [quoteData, setQuoteData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshTable, setRefreshTable] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showCreateQuote, setShowCreateQuote] = useState(false);
 
   const tableData = quoteData.filter((item) => item.site === site);
 
@@ -24,6 +23,10 @@ const Quote = () => {
     content: () => quotationPDF.current,
     documentTitle: "Quotation",
   });
+
+  const openCreateQuote = () => {
+    setShowCreateQuote((prev) => !prev);
+  };
 
   const refreshTableMode = () => {
     setRefreshTable((prev) => prev + 1);
@@ -120,16 +123,6 @@ const Quote = () => {
       width: 210,
     },
     {
-      headerName: "Extra info",
-      field: "extra_info",
-      filter: true,
-      editable: true,
-      width: 280,
-      valueGetter: (params) => {
-        return params.data?.extra_info || "--";
-      },
-    },
-    {
       headerName: "Up Lift",
       field: "up_lift",
       filter: true,
@@ -158,48 +151,49 @@ const Quote = () => {
   );
 
   return (
-    <>
-      <main id="main" className="main">
-        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-          <Breadcrumbs
-            title="Quotes"
-            middle="Quote"
-            middleUrl="Quotes"
-            main="Dashboard"
-          />
-          <button
-            className="btn btn-primary"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <i className="bi bi-plus-square"></i> Create Quote
-          </button>
-        </div>
-        <section className="section">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Quotes</h5>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <Select
-                      className="col-4"
-                      label="Site Name"
-                      name="site"
-                      isSearch={true}
-                      objKey={["site_name"]}
-                      url="sites/get/site/"
-                      onChange={handleSiteChange}
-                    />
-                    <button className="btn btn-danger" onClick={generatePDF}>
-                      PDF
-                    </button>
-                  </div>
-                  {isLoading ? (
-                    <Loading color="primary" text="Loading..." />
-                  ) : tableData?.length > 0 ? (
-                    <div ref={quotationPDF}>
-                      {quote}
-                      <div className="mt-3">
+    <main id="main" className="main">
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <Breadcrumbs
+          title="Quotes"
+          middle="Quote"
+          middleUrl="Quotes"
+          main="Dashboard"
+        />
+        <button className="btn btn-primary" onClick={openCreateQuote}>
+          <i className="bi bi-plus-square"></i> Create Quote
+        </button>
+      </div>
+      {showCreateQuote && (
+        <CreateQuotes
+          setShowCreateQuote={setShowCreateQuote}
+        />
+      )}
+      <section className="section">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Quotes</h5>
+                <div className="d-flex justify-content-between align-items-center">
+                  <Select
+                    className="col-4"
+                    label="Site Name"
+                    name="site"
+                    isSearch={true}
+                    objKey={["site_name"]}
+                    url="sites/get/site/"
+                    onChange={handleSiteChange}
+                  />
+                  <button className="btn btn-danger" onClick={generatePDF}>
+                    PDF
+                  </button>
+                </div>
+                {isLoading ? (
+                  <Loading color="primary" text="Loading..." />
+                ) : tableData?.length > 0 ? (
+                  <div ref={quotationPDF}>
+                    {quote}
+                    <div className="mt-3">
                       <Table
                         rowData={tableData}
                         columnDefs={columns}
@@ -211,36 +205,23 @@ const Quote = () => {
                           );
                         }}
                       />
-                      </div>
                     </div>
-                  ) : site === "" ? (
-                    <h5 className="text-center text-danger">
-                      Please Select Site For Quotes
-                    </h5>
-                  ) : (
-                    <h5 className="text-center text-danger">
-                      No Quotes Available !!
-                    </h5>
-                  )}
-                </div>
+                  </div>
+                ) : site === "" ? (
+                  <h5 className="text-center text-danger">
+                    Please Select Site For Quotes
+                  </h5>
+                ) : (
+                  <h5 className="text-center text-danger">
+                    No Quotes Available !!
+                  </h5>
+                )}
               </div>
             </div>
           </div>
-        </section>
-      </main>
-      <SmallModal
-        size="xl"
-        centered
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Select Supplier For Quotation"
-      >
-        <CreateQuote
-          setIsModalOpen={setIsModalOpen}
-          refreshTableMode={refreshTableMode}
-        />
-      </SmallModal>
-    </>
+        </div>
+      </section>
+    </main>
   );
 };
 

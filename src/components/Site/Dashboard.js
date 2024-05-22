@@ -115,15 +115,6 @@ const SiteDashboard = () => {
       width: 210,
     },
     {
-      headerName: "Extra info",
-      field: "extra_info",
-      filter: true,
-      width: 280,
-      valueGetter: (params) => {
-        return params.data?.extra_info || "--";
-      },
-    },
-    {
       headerName: "Up Lift",
       field: "up_lift",
       filter: true,

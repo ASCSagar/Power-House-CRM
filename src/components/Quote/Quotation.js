@@ -1,24 +1,10 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import ajaxCall from "../../helpers/ajaxCall";
-import Select from "../../UI/Select/Select";
 import Loading from "../../UI/Loading/Loading";
-
-const initialQuoteData = {
-  site: "",
-};
-
-const reducerQuote = (state, action) => {
-  switch (action.type) {
-    case "SET_SITE":
-      return { ...state, site: action.value };
-    default:
-      return state;
-  }
-};
 
 const initialSubmit = {
   isError: false,
@@ -59,25 +45,16 @@ const columns = [
     filter: true,
   },
   {
-    headerName: "Extra Info",
-    field: "ExtraInfo",
-    filter: true,
-    valueGetter: (params) => {
-      return params.data?.ExtraInfo || "--";
-    },
-  },
-  {
     headerName: "Up Lift",
     field: "Uplift",
     filter: true,
   },
 ];
 
-const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
+const Quotation = ({ siteId, setShowQuotation }) => {
   const [ratesData, setRatesData] = useState([]);
   const [isSiteLoading, setIsSiteLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [quoteData, dispatchQuote] = useReducer(reducerQuote, initialQuoteData);
   const [formStatus, setFormStatus] = useState(initialSubmit);
 
   const paginationPageSizeSelector = useMemo(() => {
@@ -105,13 +82,9 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
     return true;
   };
 
-  const handleSiteChange = (val) => {
-    setIsSiteLoading(true);
-    dispatchQuote({ type: "SET_SITE", value: val });
-  };
-
   useEffect(() => {
-    if (quoteData.site !== "") {
+    setIsSiteLoading(true);
+    if (siteId !== "") {
       (async () => {
         try {
           const response = await ajaxCall(
@@ -126,7 +99,7 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
               },
               method: "POST",
               body: JSON.stringify({
-                site_id: quoteData.site,
+                site_id: siteId,
               }),
             },
             8000
@@ -141,7 +114,7 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
         }
       })();
     }
-  }, [quoteData.site]);
+  }, [siteId]);
 
   const createRates = async (e) => {
     e.preventDefault();
@@ -161,7 +134,7 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
           standing_charge: item?.StandingCharge,
           extra_info: item?.ExtraInfo,
           up_lift: item?.Uplift,
-          site: quoteData.site,
+          site: siteId,
         };
         const response = await ajaxCall(
           "createsupplierdata/",
@@ -184,8 +157,7 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
         }
       }
       toast.success("Quotation Added Successfully.");
-      setIsModalOpen(false);
-      refreshTableMode();
+      setShowQuotation(false);
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     } finally {
@@ -229,21 +201,9 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
 
   return (
     <>
-      <div className="d-flex justify-content-center">
-        <Select
-          className="col-4"
-          label="Site Name"
-          name="site"
-          isSearch={true}
-          value={quoteData.site}
-          onChange={handleSiteChange}
-          objKey={["site_name"]}
-          url="sites/get/site/"
-        />
-      </div>
       {isSiteLoading ? (
         <div className="mt-3">
-          <Loading color="primary" text="Loading Rates..." />
+          <Loading color="primary" text="Loading Quotation..." />
         </div>
       ) : ratesData?.length > 0 ? (
         <div>
@@ -270,7 +230,7 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
             )}
           </div>
         </div>
-      ) : quoteData.site === "" ? (
+      ) : siteId === "" ? (
         <h5 className="text-center text-danger mt-3">
           Please Select Site For Quotation Rate
         </h5>
@@ -281,4 +241,4 @@ const CreateQuote = ({ setIsModalOpen, refreshTableMode }) => {
   );
 };
 
-export default CreateQuote;
+export default Quotation;

@@ -5,7 +5,7 @@ import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import Table from "../../UI/Table/Table";
 import ajaxCall from "../../helpers/ajaxCall";
 import Select from "../../UI/Select/Select";
-import CreateQuotes from "./CreateQuotes";
+import CreateQuote from "./CreateQuote";
 import Loading from "../../UI/Loading/Loading";
 import logo from "../../img/logo.png";
 
@@ -164,7 +164,7 @@ const Quote = () => {
         </button>
       </div>
       {showCreateQuote && (
-        <CreateQuotes
+        <CreateQuote
           setShowCreateQuote={setShowCreateQuote}
         />
       )}

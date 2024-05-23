@@ -11,7 +11,7 @@ const ajaxCall = async (
     }, timeOut);
 
     const response = await fetch(
-      `https://aumhealthresort.com/powercrmlatest/api/${url}`,
+      `https://aumhealthresort.com/powercrm/api/${url}`,
       fetchObj
     );
 

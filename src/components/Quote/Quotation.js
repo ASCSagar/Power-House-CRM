@@ -51,7 +51,7 @@ const columns = [
   },
 ];
 
-const Quotation = ({ siteId, setShowQuotation }) => {
+const Quotation = ({ siteId, setShowQuotation, setShowCreateQuote }) => {
   const [ratesData, setRatesData] = useState([]);
   const [isSiteLoading, setIsSiteLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -158,6 +158,7 @@ const Quotation = ({ siteId, setShowQuotation }) => {
       }
       toast.success("Quotation Added Successfully.");
       setShowQuotation(false);
+      setShowCreateQuote(false);
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     } finally {

@@ -83,90 +83,38 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
   };
 
   const validateForm = () => {
-    if (!companyData.name) {
-      setFormError("Company Name is Required");
-      return false;
+    const requiredFields = [
+      { field: "name", message: "Company Name is Required" },
+      { field: "first_name", message: "First Name is Required" },
+      { field: "last_name", message: "Last Name is Required" },
+      { field: "email", message: "Email is Required" },
+      { field: "position", message: "Position is Required" },
+      { field: "telephone_number", message: "Telephone Number is Required" },
+    ];
+    for (let { field, message } of requiredFields) {
+      if (!companyData[field]) {
+        setFormError(message);
+        return false;
+      }
     }
-    if (!companyData.first_name) {
-      setFormError("First Name is Required");
-      return false;
-    }
-    if (!companyData.last_name) {
-      setFormError("Last Name is Required");
-      return false;
-    }
-    if (!companyData.email) {
-      setFormError("Email is Required");
-      return false;
-    }
-    if (!companyData.position) {
-      setFormError("Position is Required");
-      return false;
-    }
-    if (!companyData.telephone_number) {
-      setFormError("Telephone Number is Required");
-      return false;
-    }
-    setFormStatus({
-      isError: false,
-      errMsg: null,
-      isSubmitting: false,
-    });
+    setFormStatus({ isError: true, errMsg: null, isSubmitting: false });
     return true;
   };
 
   const resetReducerForm = () => {
-    dispatchCompany({
-      type: "reset",
-    });
+    dispatchCompany({ type: "reset" });
   };
 
   const setFormError = (errMsg) => {
-    setFormStatus({
-      isError: true,
-      errMsg,
-      isSubmitting: false,
-    });
+    setFormStatus({ isError: true, errMsg, isSubmitting: false });
   };
 
   const createCompany = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setFormStatus({
-      isError: false,
-      errMsg: null,
-      isSubmitting: true,
-    });
+    setFormStatus({ isError: false, errMsg: null, isSubmitting: true });
     let sendData = {
-      name: companyData.name,
-      parent_company: companyData.parent_company,
-      reference: companyData.reference,
-      number_of_employees: companyData.number_of_employees,
-      registration_no: companyData.registrationNo,
-      estimated_turnover: companyData.estimated_turnover,
-      business_type: companyData.business_type,
-      is_macro_business: companyData.is_macro_business,
-
-      addressline1_company: companyData.addressline1_company,
-      addressline2_company: companyData.addressline2_company,
-      addressline3_company: companyData.addressline3_company,
-      postcode: companyData.postcode,
-      country_of_company: companyData.country_of_company,
-
-      account_name: companyData.account_name,
-      bank_name: companyData.bank_name,
-      account_no: companyData.account_no,
-      shortcode: companyData.shortcode,
-      sic_code: companyData.sic_code,
-
-      partner_name: companyData.partner_name,
-      partner_dob: companyData.partner_dob,
-      address: companyData.address,
-      home_post_code: companyData.home_post_code,
-      time_at_address_months: companyData.time_at_address_months,
-      time_at_address_years: companyData.time_at_address_years,
-    };
-    const contactInfo = {
+      ...companyData,
       contacts: {
         first_name: companyData.first_name,
         last_name: companyData.last_name,
@@ -176,16 +124,6 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
         email: companyData.email,
       },
     };
-    if (
-      contactInfo.contacts.first_name ||
-      contactInfo.contacts.last_name ||
-      contactInfo.contacts.contact_title ||
-      contactInfo.contacts.position ||
-      contactInfo.contacts.telephone_number ||
-      contactInfo.contacts.email
-    ) {
-      sendData = { ...sendData, ...contactInfo };
-    }
     try {
       const response = await ajaxCall(
         "company/",
@@ -205,16 +143,13 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
       if ([200, 201].includes(response.status)) {
         handleCloseCreateCompany();
         toast.success("Company Created Successfully");
-      } else if ([400, 404].includes(response.status)) {
+      } else {
         toast.error("Some Problem Occurred. Please try again.");
       }
     } catch (error) {
       toast.error("Some Problem Occurred. Please try again.");
     } finally {
-      setFormStatus({
-        ...formStatus,
-        isSubmitting: false,
-      });
+      setFormStatus({ ...formStatus, isSubmitting: false });
     }
   };
 
@@ -339,18 +274,25 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
                       });
                     }}
                   >
-                    <option selected value="1">
-                      LTD
-                    </option>
-                    <option value="2">PLC</option>
-                    <option value="3">LLP</option>
-                    <option value="4">LLC</option>
-                    <option value="5">Charity</option>
-                    <option value="6">Jersey Based</option>
-                    <option value="7">Public Sector</option>
-                    <option value="8">Non LTD</option>
-                    <option value="9">Partnership</option>
-                    <option value="10">Church / Community Organisation</option>
+                    {[
+                      { value: "LTD", label: "LTD" },
+                      { value: "PLC", label: "PLC" },
+                      { value: "LLP", label: "LLP" },
+                      { value: "LLC", label: "LLC" },
+                      { value: "Charity", label: "Charity" },
+                      { value: "Jersey Based", label: "Jersey Based" },
+                      { value: "Public Sector", label: "Public Sector" },
+                      { value: "Non LTD", label: "Non LTD" },
+                      { value: "Partnership", label: "Partnership" },
+                      {
+                        value: "Church / Community Organisation",
+                        label: "Church / Community Organisation",
+                      },
+                    ].map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -668,22 +610,26 @@ const CreateCompany = ({ refreshTableMode, setShowCreateCompany }) => {
                   <select
                     className="form-select"
                     value={companyData.contact_title}
-                    onChange={(e) => {
+                    onChange={(e) =>
                       dispatchCompany({
                         type: "contact_title",
                         value: e.target.value,
-                      });
-                    }}
+                      })
+                    }
                   >
-                    <option selected value="Dr">
-                      Dr
-                    </option>
-                    <option value="Miss">Miss</option>
-                    <option value="Mr">Mr</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="Ms">Ms</option>
-                    <option value="Professor">Professor</option>
-                    <option value="Rev">Rev</option>
+                    {[
+                      { value: "Dr", label: "Dr" },
+                      { value: "Mr", label: "Mr" },
+                      { value: "Miss", label: "Miss" },
+                      { value: "Mrs", label: "Mrs" },
+                      { value: "Professor", label: "Professor" },
+                      { value: "Rev", label: "Rev" },
+                      { value: "Ms", label: "Ms" },
+                    ].map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="col-md-4 mt-2">

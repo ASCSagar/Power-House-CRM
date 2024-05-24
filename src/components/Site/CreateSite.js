@@ -147,64 +147,69 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
   };
 
   const validateForm = () => {
-    if (!siteData.site_name) {
+    const {
+      site_name,
+      company,
+      siteAddressLine1,
+      siteAddressLine2,
+      siteAddressLine3,
+      siteAddressLine4,
+      sitePostCode,
+      billingAddressLine1,
+      billingAddressLine2,
+      billingAddressLine3,
+      billingAddressLine4,
+      billingPostCode,
+    } = siteData;
+
+    if (!site_name) {
       setFormError("Site Name is Required");
       return false;
     }
-    if (!siteData.company) {
+    if (!company) {
       setFormError("Company Name is Required");
       return false;
     }
     if (
-      !siteData.siteAddressLine1 &&
-      !siteData.siteAddressLine2 &&
-      !siteData.siteAddressLine3 &&
-      !siteData.siteAddressLine4 &&
-      !siteData.sitePostCode
+      !(
+        siteAddressLine1 ||
+        siteAddressLine2 ||
+        siteAddressLine3 ||
+        siteAddressLine4 ||
+        sitePostCode
+      )
     ) {
       setFormError("Site Address is Required");
       return false;
     }
     if (
-      !siteData.billingAddressLine1 &&
-      !siteData.billingAddressLine2 &&
-      !siteData.billingAddressLine3 &&
-      !siteData.billingAddressLine4 &&
-      !siteData.billingPostCode
+      !(
+        billingAddressLine1 ||
+        billingAddressLine2 ||
+        billingAddressLine3 ||
+        billingAddressLine4 ||
+        billingPostCode
+      )
     ) {
       setFormError("Billing Address is Required");
       return false;
     }
-    setFormStatus({
-      isError: false,
-      errMsg: null,
-      isSubmitting: false,
-    });
+    setFormStatus({ isError: true, errMsg: null, isSubmitting: false });
     return true;
   };
 
   const resetReducerForm = () => {
-    dispatchSite({
-      type: "reset",
-    });
+    dispatchSite({ type: "reset" });
   };
 
   const setFormError = (errMsg) => {
-    setFormStatus({
-      isError: true,
-      errMsg,
-      isSubmitting: false,
-    });
+    setFormStatus({ isError: true, errMsg, isSubmitting: false });
   };
 
   const createSite = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setFormStatus({
-      isError: false,
-      errMsg: null,
-      isSubmitting: true,
-    });
+    setFormStatus({ isError: false, errMsg: null, isSubmitting: true });
     let sendData = {
       site_name: siteData.site_name,
       company: siteData.company,
@@ -864,22 +869,26 @@ const CreateSite = ({ refreshTableMode, setShowCreateSite }) => {
                     <select
                       className="form-select"
                       value={siteData.contact_title}
-                      onChange={(e) => {
+                      onChange={(e) =>
                         dispatchSite({
                           type: "contact_title",
                           value: e.target.value,
-                        });
-                      }}
+                        })
+                      }
                     >
-                      <option selected value="Dr">
-                        Dr
-                      </option>
-                      <option value="Miss">Miss</option>
-                      <option value="Mr">Mr</option>
-                      <option value="Mrs">Mrs</option>
-                      <option value="Ms">Ms</option>
-                      <option value="Professor">Professor</option>
-                      <option value="Rev">Rev</option>
+                      {[
+                        { value: "Dr", label: "Dr" },
+                        { value: "Mr", label: "Mr" },
+                        { value: "Miss", label: "Miss" },
+                        { value: "Mrs", label: "Mrs" },
+                        { value: "Professor", label: "Professor" },
+                        { value: "Rev", label: "Rev" },
+                        { value: "Ms", label: "Ms" },
+                      ].map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-md-4 mt-2">

@@ -8,10 +8,12 @@ import Details from "./Details";
 import Table from "../../UI/Table/Table";
 import SupplyDetail from "./SupplyDetails/SupplyDetail";
 import Loading from "../../UI/Loading/Loading";
+import CreateQuote from "../Quote/CreateQuote";
 
 const SiteDashboard = () => {
   const { siteId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [siteData, setSiteData] = useState({});
   const [siteQuotes, setSiteQuotes] = useState([]);
@@ -141,7 +143,15 @@ const SiteDashboard = () => {
                       <button
                         className="btn btn-primary"
                         onClick={() => setIsModalOpen(true)}
-                      >{`View ${siteData?.site_name} Details`}</button>
+                      >
+                        Site Details
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setIsQuoteOpen(true)}
+                      >
+                        <i className="bi bi-plus-square" /> Create Quote
+                      </button>
                     </div>
                   </div>
                   <ul
@@ -198,6 +208,14 @@ const SiteDashboard = () => {
         title={`${siteData?.site_name} Details`}
       >
         <Details siteData={siteData} />
+      </SmallModal>
+      <SmallModal
+        size="xl"
+        centered
+        isOpen={isQuoteOpen}
+        onClose={() => setIsQuoteOpen(false)}
+      >
+        <CreateQuote />
       </SmallModal>
     </>
   );

@@ -20,6 +20,7 @@ const initialData = {
   current_supplier: "",
   renewal_date: moment().format("YYYY-MM-DD"),
   unit_rate_uplift: "MAXIMUM",
+  invariable_uplift:0,
   annual_day_usage: 0,
   day_rate: 0,
   feed_in_tariff: 0,
@@ -187,6 +188,7 @@ const CreateQuote = ({ setShowCreateQuote }) => {
           payment_method: data?.contract_detail?.payment_method || "",
           renewal_date: data?.contract_detail?.renewal_date || "",
           unit_rate_uplift: data?.contract_detail?.unit_rate_uplift || "",
+          invariable_uplift: data?.contract_detail?.invariable_uplift || "",
           annual_day_usage: data?.usage_detail?.annual_day_usage || "",
           day_rate: data?.usage_detail?.day_rate || "",
           feed_in_tariff: data?.usage_detail?.feed_in_tariff || "",
@@ -212,6 +214,7 @@ const CreateQuote = ({ setShowCreateQuote }) => {
         payment_method: formData.payment_method,
         renewal_date: formData.renewal_date,
         unit_rate_uplift: formData.unit_rate_uplift,
+        invariable_uplift: formData.invariable_uplift,
       },
       additional_detail: {
         credit_score: formData.credit_score,
@@ -417,6 +420,13 @@ const CreateQuote = ({ setShowCreateQuote }) => {
                         options={unitRateUplifts}
                         dispatchFormData={dispatchFormData}
                       />
+                      <NumberInput
+                        className="col-md-4 mt-2"
+                        label="Up Lift"
+                        value={formData.invariable_uplift}
+                        field="invariable_uplift"
+                        dispatchFormData={dispatchFormData}
+                      />
                       <TextInput
                         className="col-md-4 mt-2"
                         label="Email"
@@ -495,6 +505,7 @@ const CreateQuote = ({ setShowCreateQuote }) => {
           <div className="card-body">
             <Quotation
               siteId={site}
+              upLiftRate={formData.invariable_uplift}
               setShowQuotation={setShowQuotation}
               setShowCreateQuote={setShowCreateQuote}
             />

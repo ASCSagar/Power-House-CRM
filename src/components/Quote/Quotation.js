@@ -41,7 +41,7 @@ const columns = [
   },
   {
     headerName: "Standing Charge (pence)",
-    field: "StandingCharge",
+    field: "modifiedStandingCharge",
     filter: true,
   },
   {
@@ -51,7 +51,12 @@ const columns = [
   },
 ];
 
-const Quotation = ({ siteId, setShowQuotation, setShowCreateQuote }) => {
+const Quotation = ({
+  siteId,
+  setShowQuotation,
+  setShowCreateQuote,
+  upLiftRate,
+}) => {
   const [ratesData, setRatesData] = useState([]);
   const [isSiteLoading, setIsSiteLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -105,7 +110,12 @@ const Quotation = ({ siteId, setShowQuotation, setShowCreateQuote }) => {
             8000
           );
           if (response.status === 200) {
-            setRatesData(response?.data?.GetElectricRatesResult?.Rates);
+            const dataWithUplift =
+              response?.data?.GetElectricRatesResult?.Rates.map((rate) => ({
+                ...rate,
+                modifiedStandingCharge: rate.StandingCharge + upLiftRate,
+              }));
+            setRatesData(dataWithUplift);
           }
         } catch (error) {
           toast.error("Some Problem Occurred. Please try again.");
@@ -114,7 +124,7 @@ const Quotation = ({ siteId, setShowQuotation, setShowCreateQuote }) => {
         }
       })();
     }
-  }, [siteId]);
+  }, [siteId, upLiftRate]);
 
   const createRates = async (e) => {
     e.preventDefault();
@@ -131,7 +141,7 @@ const Quotation = ({ siteId, setShowQuotation, setShowCreateQuote }) => {
           term: item?.Term,
           day_rate: item?.DayUnitrate,
           night_rate: item?.NightUnitrate,
-          standing_charge: item?.StandingCharge,
+          standing_charge: item?.StandingCharge + item?.Uplift,
           extra_info: item?.ExtraInfo,
           up_lift: item?.Uplift,
           site: siteId,

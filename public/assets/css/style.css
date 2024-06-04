@@ -1235,14 +1235,6 @@ h6 {
   font-weight: 500;
 }
 
-.even-row {
-  background-color: white !important; 
-}
-
-.odd-row {
-  background-color: #f6f9ff !important; 
-}
-
 .ag-theme-quartz {
   --ag-header-background-color: #f6f9ff !important;
   --ag-odd-row-background-color: #f6f9ff !important;

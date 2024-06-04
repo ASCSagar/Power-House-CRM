@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import MUITable from "../../UI/Table/MUITable";
+import Table from "../../UI/Table/Table";
 import Breadcrumbs from "../../UI/Breadcrumbs/Breadcrumbs";
 import ajaxCall from "../../helpers/ajaxCall";
 import SmallModal from "../../UI/Modal/Modal";
 import Details from "./Details";
 import CheckIcon from "../../UI/Icons/CheckIcon";
 import CancelIcon from "../../UI/Icons/Cancel";
-import CreateSite from "../Site/CreateSite";
 
 const CompanyDashboard = () => {
   const { companyId } = useParams();
-  const [isSiteOpen, setIsSiteOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [companyData, setCompanyData] = useState({});
-  const [companySites, setCompanySites] = useState([]);
+  const [companySites, setCompanySites] = useState();
 
   useEffect(() => {
     const fetchData = async (url, setData) => {
@@ -50,72 +48,30 @@ const CompanyDashboard = () => {
   };
 
   const columns = [
+    { headerName: "Site Name", field: "site_name", filter: true },
+    { headerName: "Type Of Owner", field: "type_of_owner", filter: true },
+    { headerName: "Owner Name", field: "owner_name", filter: true },
+    { headerName: "Company", field: "company.name", filter: true },
+    { headerName: "Agent Email", field: "agent_email", filter: true },
     {
-      flex: 1,
-      field: "site_name",
-      headerName: "Site Name",
-      sortable: true,
-      filterable: true,
-    },
-    {
-      flex: 1,
-      field: "type_of_owner",
-      headerName: "Type Of Owner",
-      sortable: true,
-      filterable: true,
-    },
-    {
-      flex: 1,
-      field: "owner_name",
-      headerName: "Owner Name",
-      sortable: true,
-      filterable: true,
-    },
-    {
-      flex: 1,
-      field: "company.name",
-      headerName: "Company",
-      sortable: true,
-      filterable: true,
-    },
-    {
-      flex: 1,
-      field: "agent_email",
-      headerName: "Agent Email",
-      sortable: true,
-      filterable: true,
-    },
-    {
-      flex: 1,
-      field: "bill_to_sent",
       headerName: "Bill To Sent",
-      sortable: true,
-      filterable: true,
-      renderCell: renderItemAvailable,
+      field: "bill_to_sent",
+      cellRenderer: renderItemAvailable,
+      filter: true,
     },
     {
-      flex: 1,
-      field: "change_of_tenancy",
       headerName: "Change Of Tenancy",
-      sortable: true,
-      filterable: true,
-      renderCell: renderItemAvailable,
+      field: "change_of_tenancy",
+      cellRenderer: renderItemAvailable,
+      filter: true,
     },
     {
-      flex: 1,
-      field: "customer_consent",
       headerName: "Customer Consent",
-      sortable: true,
-      filterable: true,
-      renderCell: renderItemAvailable,
+      field: "customer_consent",
+      cellRenderer: renderItemAvailable,
+      filter: true,
     },
-    {
-      flex: 1,
-      field: "notes",
-      headerName: "Notes",
-      sortable: true,
-      filterable: true,
-    },
+    { headerName: "Notes", field: "notes", filter: true },
   ];
 
   return (
@@ -134,23 +90,15 @@ const CompanyDashboard = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between">
                     <h5 className="card-title">{companyData?.name}</h5>
-                    <div className="d-flex align-items-center gap-2">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => setIsModalOpen(true)}
-                      >
-                        Company Details
-                      </button>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => setIsSiteOpen(true)}
-                      >
-                        <i className="bi bi-plus-square" /> Create Site
-                      </button>
-                    </div>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      {`View ${companyData?.name} Details`}
+                    </button>
                   </div>
                   {companySites?.length > 0 ? (
-                    <MUITable rows={companySites} columns={columns} />
+                    <Table rowData={companySites} columnDefs={columns} />
                   ) : (
                     <h5 className="text-center text-danger">
                       {`No Sites Available For ${companyData?.name} !!`}
@@ -170,14 +118,6 @@ const CompanyDashboard = () => {
         title={`${companyData?.name} Details`}
       >
         <Details companyData={companyData} />
-      </SmallModal>
-      <SmallModal
-        size="xl"
-        centered
-        isOpen={isSiteOpen}
-        onClose={() => setIsSiteOpen(false)}
-      >
-        <CreateSite />
       </SmallModal>
     </>
   );
